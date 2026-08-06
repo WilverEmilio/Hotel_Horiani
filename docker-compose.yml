@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: hotel_horiani_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: horiani
+      POSTGRES_PASSWORD: horiani_dev_password
+      POSTGRES_DB: hotel_horiani
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

@@ -1,0 +1,27 @@
+# Dependencias
+node_modules/
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Variables de entorno — NUNCA subir
+.env
+.env.local
+.env.production
+
+# Builds
+dist/
+.astro/
+build/
+out/
+
+# Editores
+.vscode/settings.json
+.idea/
+
+# Sistema
+.DS_Store
+*.log

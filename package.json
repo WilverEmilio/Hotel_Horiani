@@ -1,0 +1,10 @@
+{
+  "name": "hotel-horiani",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n API,WEB,DASH -c blue,green,magenta \"cd apps/api && venv/bin/uvicorn app.main:app --reload\" \"pnpm --filter web dev\" \"pnpm --filter dashboard dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.3"
+  }
+}
