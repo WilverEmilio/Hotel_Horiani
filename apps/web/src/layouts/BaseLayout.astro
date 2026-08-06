@@ -1,0 +1,43 @@
+---
+import { ClientRouter } from "astro:transitions";
+import NavBar from "../components/NavBar.astro";
+import HeroBanner from "../components/HeroBanner.astro"
+const { title, description } = Astro.props;
+---
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+        <meta name="viewport" content="width=divice-width">
+        <meta name="generator" content={Astro.generator}>
+        <meta name="description" content={description}>
+        
+        <title>{title}</title>
+        
+    </head>
+
+    <body>
+      <NavBar/>
+      <main>
+        <slot></slot>
+      </main>
+    </body>
+</html>
+
+<style is:global>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body{
+        font-family: Arial, sans-serif;
+        background: #FAEFD4;
+        color: #060606; 
+    }
+
+    main{
+        padding-top: 96px;
+    }
+</style>
