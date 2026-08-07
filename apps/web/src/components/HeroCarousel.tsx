@@ -148,6 +148,26 @@ export default function HeroCarousel({ images, interval = 5000 }: Props) {
           background: #C9A84C;
           transform: scale(1.35);
         }
+        @media (max-width: 768px) {
+          .carousel__arrow {
+            width: 40px;
+            height: 40px;
+            font-size: 2rem;
+          }
+
+          .carousel__arrow--prev { left: 0.75rem; }
+          .carousel__arrow--next { right: 0.75rem; }
+
+          .carousel__dots {
+            bottom: 1.25rem;
+            gap: 10px;         /* puntos más separados para el dedo */
+          }
+
+          .carousel__dot {
+            width: 10px;       /* puntos más grandes para tocar fácil */
+            height: 10px;
+          }
+        }
       `}</style>
     </div>
   )
