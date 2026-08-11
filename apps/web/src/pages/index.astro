@@ -2,9 +2,11 @@
 const title = "Hotel Horiani"
 const description = "Bienvenido a la página web del Hotel Horiani, donde la comodidad y el lujo se encuentran en un entorno agradable."
 import BaseLayout from "../layouts/BaseLayout.astro"
-import HeroBanner from "../components/HeroBanner.astro"
+import HeroBanner from "../components/home/HeroBanner.astro"
+import SobrePreiew from "../components/home/SobrePreiew.astro"
 ---
 
 <BaseLayout title={title} description={description}>
 	<HeroBanner/>
+	<SobrePreiew/>
 </BaseLayout>

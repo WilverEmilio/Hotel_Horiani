@@ -1,0 +1,245 @@
+---
+---
+
+<section class="preview">
+  <div class="preview__container">
+
+    <div class="preview__texto">
+      <span class="preview__eyebrow">Quiénes somos</span>
+      <h2 class="preview__titulo">Acerca de nosotros</h2>
+      <div class="preview__divider"></div>
+
+      <div class="preview__parrafos">
+        <p>
+          En el Hotel Horiani, nos enorgullece ofrecer a nuestros huéspedes 
+          una experiencia única y memorable. Desde nuestra fundación, hemos 
+          trabajado arduamente para crear un ambiente acogedor y elegante, 
+          donde cada detalle está cuidadosamente diseñado para brindar 
+          comodidad y satisfacción.
+        </p>
+        <p>
+          Nuestro equipo de profesionales altamente capacitados se dedica a 
+          proporcionar un servicio excepcional, asegurando que cada estancia 
+          sea placentera y sin preocupaciones. Nos esforzamos por superar las 
+          expectativas de nuestros huéspedes, ofreciendo instalaciones modernas, 
+          servicios de calidad y una atención personalizada.
+        </p>
+        <p>
+          A lo largo de los años, hemos recibido numerosos reconocimientos por 
+          nuestra excelencia en hospitalidad y compromiso con la satisfacción 
+          del cliente.
+        </p>
+      </div>
+
+      <a href="/sobre-nosotros" class="preview__btn">
+        Ver más
+        <span class="preview__arrow">→</span>
+      </a>
+    </div>
+
+    <div class="preview__imagen-wrap">
+      <div class="preview__imagen-frame">
+        <img
+          src="../../../public/images/hero/ParqueoHotel.jpg"
+          alt="Hotel Horiani"
+          class="preview__imagen"
+        />
+        <div class="preview__badge">
+          <span class="preview__badge-num">15+</span>
+          <span class="preview__badge-txt">Años de<br/>experiencia</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .preview {
+    background: #ffffff;
+    padding: 6rem 1.5rem;
+  }
+
+  .preview__container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  /* ── Texto ── */
+  .preview__eyebrow {
+    display: inline-block;
+    color: #C9A84C;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .preview__titulo {
+    color: #1B3A6B;
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 700;
+    font-family: Georgia, serif;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+
+  .preview__divider {
+    width: 50px;
+    height: 3px;
+    background: #C9A84C;
+    border-radius: 2px;
+    margin-bottom: 2rem;
+  }
+
+  .preview__parrafos {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .preview__parrafos p {
+    color: #555555;
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .preview__parrafos p:first-child {
+    color: #1B3A6B;
+    font-weight: 500;
+    font-size: 1.05rem;
+  }
+
+  /* ── Botón ── */
+  .preview__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #1B3A6B;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.75rem 1.75rem;
+    border-radius: 6px;
+    transition: background 0.2s, gap 0.2s;
+  }
+
+  .preview__btn:hover {
+    background: #C9A84C;
+    color: #1B3A6B;
+    gap: 0.85rem;
+  }
+
+  .preview__arrow {
+    transition: transform 0.2s;
+  }
+
+  .preview__btn:hover .preview__arrow {
+    transform: translateX(4px);
+  }
+
+  /* ── Imagen ── */
+  .preview__imagen-wrap {
+    position: relative;
+  }
+
+  .preview__imagen-frame {
+    position: relative;
+    border-radius: 12px;
+    overflow: visible;
+  }
+
+  /* marco decorativo */
+  .preview__imagen-frame::before {
+    content: "";
+    position: absolute;
+    inset: -10px -10px 10px 10px;
+    border: 2px solid #C9A84C;
+    border-radius: 12px;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  .preview__imagen {
+    width: 100%;
+    height: 460px;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* badge flotante */
+  .preview__badge {
+    position: absolute;
+    bottom: -1.25rem;
+    left: -1.25rem;
+    z-index: 2;
+    background: #1B3A6B;
+    color: white;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 8px 24px rgba(27,58,107,0.25);
+  }
+
+  .preview__badge-num {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #C9A84C;
+    font-family: Georgia, serif;
+    line-height: 1;
+  }
+
+  .preview__badge-txt {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    opacity: 0.85;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .preview__container {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    /* imagen va arriba del texto en móvil */
+    .preview__imagen-wrap {
+      order: -1;
+    }
+
+    .preview__imagen-frame::before {
+      display: none;
+    }
+
+    .preview__imagen {
+      height: 280px;
+    }
+
+    .preview__badge {
+      bottom: -1rem;
+      left: 1rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .preview {
+      padding: 4rem 1.25rem;
+    }
+
+    .preview__parrafos p:last-child {
+      display: none;   
+    }
+  }
+</style>

@@ -50,6 +50,7 @@ export default function HeroCarousel({ slides, interval = 5000 }: Props) {
   return (
     <div
       className="carousel"
+      style={{ "--dot-duration": `${interval}ms` } as React.CSSProperties}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
