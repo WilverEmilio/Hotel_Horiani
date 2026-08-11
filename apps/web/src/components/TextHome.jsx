@@ -101,7 +101,7 @@ const SplitText = ({
               },
               onComplete: () => {
                 animationCompletedRef.current = true;
-                onCompleteRef.current?.();
+                // onCompleteRef.current?.();
               },
               willChange: 'transform, opacity',
               force3D: true
