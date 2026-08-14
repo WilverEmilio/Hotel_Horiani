@@ -1,15 +1,195 @@
 ---
-
 ---
-<section>
-    <div>
-        <h2>Misión</h2>
-        <p>Nuestra misión es brindarles a nuestros clientes un servicio de alta calidad, 
-            comodidad en todo momento, que disfruten de nuestro hogar y nuestra ciudad, Quetzaltenango, 
-            como si fueran suyas. </p>
+
+<section class="mv">
+  <div class="mv__container">
+
+    <!-- Header -->
+    <div class="mv__header">
+      <span class="mv__eyebrow">Nuestro compromiso</span>
+      <h2 class="mv__titulo">Misión y Visión</h2>
+      <div class="mv__divider"></div>
+      <p class="mv__desc">
+        Nos comprometemos a ofrecer un servicio excepcional que supere las 
+        expectativas de nuestros clientes, creando una experiencia memorable 
+        en cada visita.
+      </p>
     </div>
-    <div>
-        <h2>Visión</h2>
-        <p>Nuestra visión es brindar un hogar a los viajeros es nuestro objetivo, por ello queremos expandirnos a otras áreas de la ciudad, que Hotel Horiani tenga un buen reconocimiento a nivel nacional, así mismo obtener una mayor cantidad de estrellas por el buen servicio ofrecido.</p>
+
+    <!-- Cards -->
+    <div class="mv__grid">
+
+      <div class="mv__card">
+        <div class="mv__card-icon">
+          <span class="mv__card-number">1</span>
+        </div>
+        <h3 class="mv__card-titulo">Misión</h3>
+        <div class="mv__card-divider"></div>
+        <p class="mv__card-desc">
+          Brindarles a nuestros clientes un servicio de alta calidad y comodidad 
+          en todo momento, que disfruten de nuestro hogar y nuestra ciudad, 
+          Quetzaltenango, como si fueran suyas.
+        </p>
+      </div>
+
+      <div class="mv__card">
+        <div class="mv__card-icon">
+            <span class="mv__card-number">2</span>
+        </div>
+        <h3 class="mv__card-titulo">Visión</h3>
+        <div class="mv__card-divider"></div>
+        <p class="mv__card-desc">
+          Brindar un hogar a los viajeros es nuestro objetivo. Queremos 
+          expandirnos a otras áreas de la ciudad y que Hotel Horiani tenga 
+          un reconocimiento a nivel nacional, obteniendo mayor cantidad de 
+          estrellas por el buen servicio ofrecido.
+        </p>
+      </div>
+
     </div>
+  </div>
 </section>
+
+<style>
+  .mv {
+    background: #f8f7f4;
+    padding: 5rem 1.5rem;
+  }
+
+  .mv__container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ── Header ── */
+  .mv__header {
+    text-align: left;
+    margin-bottom: 3.5rem;
+    max-width: 640px;      /* evita que el texto se extienda demasiado */
+  }
+
+  .mv__eyebrow {
+    display: inline-block;
+    color: #C9A84C;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .mv__titulo {
+    color: #1B3A6B;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 700;
+    font-family: Georgia, serif;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .mv__divider {
+    width: 100px;
+    height: 3px;
+    background: #C9A84C;
+    border-radius: 2px;
+    margin: 0 auto 1.5rem 0;  /* pegado a la izquierda */
+  }
+
+  .mv__desc {
+    color: #555555;
+    font-size: 1rem;
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  /* ── Grid ── */
+  .mv__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  /* ── Card ── */
+  .mv__card {
+    background: #f8f7f4;
+    border-radius: 12px;
+    border: 0.5px solid #eeeeee;
+    border-top: 3px solid #C9A84C;
+    padding: 2.5rem 2rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .mv__card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(27, 58, 107, 0.10);
+  }
+
+  /* ── Ícono ── */
+  .mv__card-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #dde8fb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    transition: background 0.3s;
+  }
+
+  .mv__card:hover .mv__card-icon {
+    background: #1B3A6B;
+  }
+
+  .mv__card-icon span {
+    font-size: 1.6rem;
+    color: #1B3A6B;
+    transition: color 0.3s;
+  }
+
+  .mv__card:hover .mv__card-icon span {
+    color: #EAF0FA;
+  }
+
+  /* ── Título card ── */
+  .mv__card-titulo {
+    color: #1B3A6B;
+    font-size: 1.4rem;
+    font-weight: 700;
+    font-family: Georgia, serif;
+    margin-bottom: 0.75rem;
+  }
+
+  .mv__card-divider {
+    width: 40px;
+    height: 2px;
+    background: #C9A84C;
+    border-radius: 2px;
+    margin-bottom: 1.25rem;
+  }
+
+  /* ── Descripción card ── */
+  .mv__card-desc {
+    color: #555555;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .mv {
+      padding: 4rem 1.25rem;
+    }
+
+    .mv__grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .mv__card {
+      padding: 2rem 1.5rem;
+    }
+  }
+</style>
