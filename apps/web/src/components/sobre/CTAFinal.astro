@@ -1,0 +1,233 @@
+---
+---
+
+<section class="cta">
+  <div class="cta__container">
+
+    <!-- Decoración -->
+    <div class="cta__deco cta__deco--left"></div>
+    <div class="cta__deco cta__deco--right"></div>
+
+    <!-- Contenido -->
+    <div class="cta__content">
+      <span class="cta__eyebrow">Hotel Horiani · Quetzaltenango</span>
+
+      <h2 class="cta__titulo">
+        ¿Listo para hospedarte<br />con nosotros?
+      </h2>
+
+      <div class="cta__divider"></div>
+
+      <p class="cta__desc">
+        Reserva directamente con nosotros y obtén la mejor tarifa garantizada. 
+        Nuestro equipo está disponible las 24 horas para hacer de tu estadía 
+        una experiencia inolvidable.
+      </p>
+
+      <!-- Garantías -->
+      <div class="cta__garantias">
+        <div class="cta__garantia">
+          <i class="ti ti-check" aria-hidden="true"></i>
+          <span>Mejor tarifa garantizada</span>
+        </div>
+        <div class="cta__garantia">
+          <i class="ti ti-check" aria-hidden="true"></i>
+          <span>Cancelación flexible</span>
+        </div>
+        <div class="cta__garantia">
+          <i class="ti ti-check" aria-hidden="true"></i>
+          <span>Atención 24/7</span>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="cta__acciones">
+        <!-- <a href="/reservar" class="cta__btn cta__btn--primary">
+          <i class="ti ti-calendar" aria-hidden="true"></i>
+          Reservar ahora
+        </a> -->
+        <a href="/contacto" class="cta__btn cta__btn--secondary">
+          <i class="ti ti-phone" aria-hidden="true"></i>
+          Contáctanos
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .cta {
+    position: relative;
+    background: #122850;
+    padding: 6rem 1.5rem;
+    overflow: hidden;
+  }
+
+  .cta__deco {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    border: 1px solid rgba(201, 168, 76, 0.12);
+    pointer-events: none;
+  }
+
+  .cta__deco--left {
+    top: -150px;
+    left: -150px;
+  }
+
+  .cta__deco--right {
+    bottom: -150px;
+    right: -150px;
+  }
+
+  /* ── Contenedor ── */
+  .cta__container {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Contenido ── */
+  .cta__content {
+    text-align: center;
+  }
+
+  /* ── Eyebrow ── */
+  .cta__eyebrow {
+    display: inline-block;
+    color: #C9A84C;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  /* ── Título ── */
+  .cta__titulo {
+    color: #ffffff;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    font-family: Georgia, serif;
+    line-height: 1.2;
+    margin-bottom: 1.25rem;
+  }
+
+  /* ── Divider ── */
+  .cta__divider {
+    width: 60px;
+    height: 3px;
+    background: #C9A84C;
+    border-radius: 2px;
+    margin: 0 auto 1.75rem;
+  }
+
+  /* ── Descripción ── */
+  .cta__desc {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 1.05rem;
+    line-height: 1.8;
+    margin: 0 auto 2.5rem;
+    max-width: 580px;
+  }
+
+  /* ── Garantías ── */
+  .cta__garantias {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+  }
+
+  .cta__garantia {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+  }
+
+  .cta__garantia i {
+    font-size: 1rem;
+    color: #C9A84C;
+  }
+
+  /* ── Botones ── */
+  .cta__acciones {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .cta__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    padding: 0.875rem 2rem;
+    border-radius: 6px;
+    letter-spacing: 0.02em;
+    transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+  }
+
+  .cta__btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .cta__btn i {
+    font-size: 1.1rem;
+  }
+
+  /* Primario — dorado */
+  .cta__btn--primary {
+    background: #C9A84C;
+    color: #122850;
+  }
+
+  .cta__btn--primary:hover {
+    background: #B8962F;
+  }
+
+  /* Secundario — outline blanco */
+  .cta__btn--secondary {
+    background: transparent;
+    color: #ffffff;
+    border: 1.5px solid rgba(255, 255, 255, 0.4);
+  }
+
+  .cta__btn--secondary:hover {
+    border-color: #ffffff;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .cta {
+      padding: 4.5rem 1.25rem;
+    }
+
+    .cta__garantias {
+      gap: 1rem;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .cta__acciones {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .cta__btn {
+      justify-content: center;
+      padding: 1rem 2rem;
+    }
+  }
+</style>
