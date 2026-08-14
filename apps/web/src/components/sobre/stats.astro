@@ -1,0 +1,159 @@
+---
+import StatsCounter from "./StatsCounter"
+
+const stats = [
+  { valor: 15,   sufijo: "+", etiqueta: "Años de experiencia" },
+  { valor: 48,   sufijo: "+",  etiqueta: "Habitaciones" },
+  { valor: 5000, sufijo: "+", etiqueta: "Huéspedes atendidos" },
+  { valor: 98,   sufijo: "%", etiqueta: "Satisfacción" },
+]
+---
+
+<section class="stats">
+  <div class="stats__container">
+    <div class="stats__header">
+      <span class="stats__eyebrow">Hotel Horiani en números</span>
+      <h2 class="stats__titulo">Nuestra trayectoria</h2>
+      <div class="stats__divider"></div>
+        <p class="stats__desc">
+            A lo largo de los años, hemos trabajado arduamente para brindar un 
+            servicio excepcional a nuestros huéspedes. Estos números reflejan 
+            nuestro compromiso con la excelencia y la satisfacción del cliente.
+        </p>
+    </div>
+
+    <div class="stats__grid">
+      <StatsCounter
+        client:only="react"
+        stats={stats}
+      />
+    </div>
+
+  </div>
+</section>
+
+<style>
+    .stats {
+        background: #f8f7f4;
+        padding: 5rem 1.5rem;
+    }
+
+    .stats__container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .stats__header {
+        text-align: left;
+        margin-bottom: 3.5rem;
+        max-width: 600px;
+    }
+
+    .stats__eyebrow {
+        display: inline-block;
+        color: #C9A84C;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.2rem; 
+        text-transform: uppercase;
+        margin-bottom: 0.75rem;
+    }
+
+    .stats__titulo {
+        color: #1B3A6B;
+        font-size: clamp(1.75rem, 2vw, 2.5rem);
+        front-weight: 700;
+        font-family: Georgia, serif;
+        margin-bottom: 1rem;
+        line-height: 1.2;
+    }
+
+    .stats__divider{
+        width: 100px;
+        height: 3px;
+        background: #C9A84C;
+        border-radius: 2px;
+        margin: 0 auto 1.5rem 0; 
+    }
+
+    .stats__desc {
+        color: #555555;
+        font-size: 1rem;
+        line-height: 1.8;
+        margin: 0;
+    }
+
+    .stats__grid{
+        display: grid; 
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+
+    @media (max-width: 768px) {
+    .stats {
+        padding: 4rem 1.25rem;
+    }
+
+    .stats__grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    }
+
+    @media (max-width: 420px) {
+    .stats__grid {
+        grid-template-columns: 1fr;
+    }
+    }
+</style>
+
+<style is:global>
+  .stat__item {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 0.5px solid #eeeeee;
+    border-top: 3px solid #C9A84C;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .stat__numero {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 2px;
+    margin-bottom: 0.75rem;
+    line-height: 1;
+  }
+
+  .stat__numero span:first-child {
+    font-size: 3.5rem;
+    font-weight: 700;
+    font-family: Georgia, serif;
+    color: #C9A84C;
+    line-height: 1;
+  }
+
+  .stat__sufijo {
+    font-size: 2rem;
+    font-weight: 700;
+    font-family: Georgia, serif;
+    color: #C9A84C;
+    line-height: 1;
+  }
+
+  .stat__etiqueta {
+    color: #1B3A6B;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+</style>
