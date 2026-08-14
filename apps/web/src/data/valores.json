@@ -1,0 +1,32 @@
+[
+  {
+    "icono": "ti-mood-smile",
+    "titulo": "Amabilidad",
+    "descripcion": "Nos esforzamos por tratar a todos con amabilidad y cortesía, creando una experiencia que combine confort y servicio excepcional."
+  },
+  {
+    "icono": "ti-eye-check",
+    "titulo": "Honestidad",
+    "descripcion": "Garantizar confianza, seguridad e integridad en las relaciones interpersonales, ofreciendo conductas éticas en todo momento."
+  },
+  {
+    "icono": "ti-medal",
+    "titulo": "Honradez",
+    "descripcion": "Actuamos con rectitud en todo lo que hacemos, valoramos la verdad ya que es fundamental en la vida social."
+  },
+  {
+    "icono": "ti-heart",
+    "titulo": "Pasión",
+    "descripcion": "Nos apasiona lo que hacemos, nos esforzamos por brindar un servicio excepcional y superar las expectativas de nuestros clientes."
+  },
+  {
+    "icono": "ti-users",
+    "titulo": "Respeto",
+    "descripcion": "Tratamos a todos con dignidad y consideración, fomentando un ambiente inclusivo y acogedor para nuestros huéspedes."
+  },
+  {
+    "icono": "ti-shield-check",
+    "titulo": "Responsabilidad",
+    "descripcion": "Cumplir con las obligaciones que acordamos con nuestros clientes, actuamos de manera correcta y comprometidos con el servicio."
+  }
+]

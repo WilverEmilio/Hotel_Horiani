@@ -1,15 +1,90 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro"
+import HistoriaAstroComponent from "../components/sobre/historia.astro"
+import MisionYVisionAstroComponent from "../components/sobre/mision_y_vision.astro"
+import ValoresAstroComponent from "../components/sobre/valores.astro"
 ---
 
 <BaseLayout title="Sobre Nosotros">
   <section class="page-hero">
-    <h1>Sobre Nosotros</h1>
+    <div class="page-hero__overlay" />
+    <div class="page-hero__content">
+      <h1 class="page-hero__title">Sobre Nosotros</h1>
+      <p class="page-hero__subtitle">Conoce más sobre nuestro hotel</p>
+    </div>
   </section>
+
+  <HistoriaAstroComponent />
+  <MisionYVisionAstroComponent />
+  <ValoresAstroComponent />
 </BaseLayout>
 
 <style>
   .page-hero {
-    padding-top: 72px;    /* Esto siempre va en las paginas */
+    position: relative;
+    padding-top: 72px;               
+    height: 420px;                  
+    background-image: url("/images/hero/ParqueoHotel.jpg");  
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .page-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(27, 58, 107, 0.70) 0%,
+      rgba(18, 40, 80, 0.60) 100%
+    );
+  }
+
+  .page-hero__content {
+    position: relative;
+    z-index: 1;
+    padding: 0 1.5rem;
+  }
+
+  .page-hero__eyebrow {
+    display: block;
+    color: #C9A84C;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .page-hero__title {
+    color: #ffffff;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    font-family: Georgia, serif;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+
+  .page-hero__subtitle {
+    color: rgba(255, 255, 255, 0.80);
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .page-hero {
+      height: 320px;
+    }
+
+    .page-hero__title {
+      font-size: clamp(2rem, 8vw, 2.5rem);
+    }
+
+    .page-hero__subtitle {
+      font-size: 0.95rem;
+    }
   }
 </style>

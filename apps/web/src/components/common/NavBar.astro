@@ -12,8 +12,7 @@ const currentPath = Astro.url.pathname
 const isActive = (path: string) =>
   path === "/" ? currentPath === "/" : currentPath.startsWith(path)
 
-const isHome = currentPath === "/"   // ← detecta si es el home
-
+const isHome = currentPath === "/"   
 import { Image } from "astro:assets"
 import LogoHH from "../../assets/images/HHLogo.png"
 ---
