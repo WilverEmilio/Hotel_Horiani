@@ -1,0 +1,184 @@
+---
+const servicios = [
+  {
+    icono: "ti-car",
+    nombre: "Parqueo",
+    descripcion: "Contamos con estacionamiento seguro y vigilado disponible para todos nuestros huéspedes durante su estadía."
+  },
+  {
+    icono: "ti-clock-24",
+    nombre: "Servicio 24 horas",
+    descripcion: "Nuestro equipo de recepción está disponible las 24 horas del día para atender cualquier solicitud o necesidad."
+  },
+  {
+    icono: "ti-tools-kitchen-2",
+    nombre: "Restaurante",
+    descripcion: "Disfruta de nuestra gastronomía con platillos típicos guatemaltecos y opciones internacionales en un ambiente acogedor."
+  },
+]
+---
+
+<section class="servicios" id="servicios">
+  <div class="servicios__container">
+
+    <!-- Header -->
+    <div class="servicios__header">
+      <span class="servicios__eyebrow">Servicios</span>
+      <h2 class="servicios__titulo">Nuestros Servicios</h2>
+      <div class="servicios__divider"></div>
+      <p class="servicios__desc">
+        Diseñados para que tu estadía sea cómoda desde que llegas hasta que te vas.
+        Cada servicio está pensado para darte tranquilidad y comodidad en todo momento.
+      </p>
+    </div>
+
+    <!-- Lista -->
+    <div class="servicios__lista">
+      {servicios.map((s, i) => (
+        <div class="servicios__item">
+          <i class={`ti ${s.icono} servicios__icono`} aria-hidden="true"></i>
+          <h3 class="servicios__nombre">{s.nombre}</h3>
+          <p class="servicios__desc-item">{s.descripcion}</p>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .servicios {
+    background: #1B3A6B;
+    padding: 5rem 1.5rem;
+  }
+
+  .servicios__container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ── Header ── */
+  .servicios__header {
+    text-align: center;
+    margin-bottom: 4rem;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .servicios__eyebrow {
+    display: inline-block;
+    color: #C9A84C;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .servicios__titulo {
+    color: #ffffff;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 700;
+    font-family: Georgia, serif;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .servicios__divider {
+    width: 50px;
+    height: 3px;
+    background: #C9A84C;
+    border-radius: 2px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .servicios__desc {
+    color: rgba(255, 255, 255, 0.70);
+    font-size: 1rem;
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  /* ── Lista ── */
+  .servicios__lista {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    border-top: 1px solid rgba(255, 255, 255, 0.10);
+    padding-top: 3.5rem;
+    gap: 0;
+  }
+
+  /* ── Item ── */
+  .servicios__item {
+    flex: 1;
+    text-align: center;
+    padding: 0 3rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.10);
+  }
+
+  .servicios__item:last-child {
+    border-right: none;
+  }
+
+  /* ── Ícono ── */
+  .servicios__icono {
+    font-size: 3rem;
+    color: #C9A84C;
+    display: block;
+    margin-bottom: 1.25rem;
+    transition: transform 0.3s ease;
+  }
+
+  .servicios__item:hover .servicios__icono {
+    transform: translateY(-5px);
+  }
+
+  /* ── Nombre ── */
+  .servicios__nombre {
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: Georgia, serif;
+    margin-bottom: 0.75rem;
+  }
+
+  /* ── Descripción item ── */
+  .servicios__desc-item {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.875rem;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .servicios {
+      padding: 4rem 1.25rem;
+    }
+
+    .servicios__lista {
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      padding-top: 2.5rem;
+    }
+
+    .servicios__item {
+      padding: 2rem 1.5rem;
+      border-right: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .servicios__item:last-child {
+      border-bottom: none;
+    }
+
+    .servicios__icono {
+      font-size: 2.5rem;
+    }
+  }
+</style>
