@@ -1,32 +1,66 @@
 ---
-import AccordionGallery from "../habitaciones/AccordionGallery";
+import AccordionGallery from "../habitaciones/AccordionGallery"
 
 const items = [
-  { image: '/images/hero/ParqueoCAA.jpeg', label: 'Habitación Individual', link: '#' },
-  { image: 'https://picsum.photos/id/1018/900/1200', label: 'Ridgeline', link: '#' },
-  { image: 'https://picsum.photos/id/1039/900/1200', label: 'Falls', link: '#' }
-];
+  { image: '/images/hero/ParqueoCAA.jpeg', label: 'Habitación Individual', link: '/habitaciones#individual' },
+  { image: 'https://picsum.photos/id/1018/900/1200', label: 'Habitación Doble', link: '/habitaciones#doble' },
+  { image: 'https://picsum.photos/id/1039/900/1200', label: 'Habitación Suite', link: '/habitaciones#suite' },
+]
 ---
 
 <section class="hb">
-  <div class="hb_container">
-    <div class="hb_texto">
-      <span class="hb_eyerbrow">Conoce nuestras habitaciones</span>
-      <h2 class="hb_titulo">Habitaciones</h2>
-      <div class=hb_divider></div>
-      <p class="hb_desc">
-        Contamos con diferentes habitaciones
+  <div class="hb__container">
+
+    <!-- Texto izquierda -->
+    <div class="hb__texto">
+      <span class="hb__eyebrow">Conoce nuestras habitaciones</span>
+      <h2 class="hb__titulo">Habitaciones</h2>
+      <div class="hb__divider"></div>
+      <p class="hb__desc">
+        Cada habitación de Hotel Horiani ha sido diseñada pensando en tu comodidad 
+        y descanso. Contamos con diferentes tipos de habitaciones para adaptarnos 
+        a tus necesidades, ya sea que viajes solo, en pareja o en familia.
       </p>
+      <p class="hb__desc hb__desc--mt">
+        Todas nuestras habitaciones incluyen baño privado, televisión, 
+        WiFi y servicio de limpieza diario — para que solo te 
+        preocupes por disfrutar Quetzaltenango.
+      </p>
+
+      <ul class="hb__features">
+        <li class="hb__feature">
+          <i class="ti ti-wifi" aria-hidden="true"></i>
+          <span>WiFi</span>
+        </li>
+        <li class="hb__feature">
+          <i class="ti ti-bath" aria-hidden="true"></i>
+          <span>Baño privado</span>
+        </li>
+        <li class="hb__feature">
+          <i class="ti ti-device-tv" aria-hidden="true"></i>
+          <span>Televisión</span>
+        </li>
+        <li class="hb__feature">
+          <i class="ti ti-shield-check" aria-hidden="true"></i>
+          <span>Servicio diario</span>
+        </li>
+      </ul>
+
+      <a href="/habitaciones" class="hb__btn">
+        Ver todas las habitaciones
+        <i class="ti ti-arrow-right" aria-hidden="true"></i>
+      </a>
     </div>
-    <div class="hb_images">
+
+    <div class="hb__galeria">
       <AccordionGallery
-      client:only="react" 
+        client:only="react"
         items={items}
-        defaultIndex={1}
+        defaultIndex={0}
         expandRatio={0.6}
         trigger="hover"
-        accentColor="#ffffff"
-        overlayColor="#060010"
+        accentColor="#C9A84C"
+        overlayColor="#122850"
         textColor="#ffffff"
         grayscale
         showLabels
@@ -35,30 +69,31 @@ const items = [
         parallax={0.2}
         tilt={0}
         stagger={0.1}
-        height={480}
+        height={520}
         gap={10}
-        radius={20}
+        radius={16}
         orientation="horizontal"
       />
-      <button>Ver más</button>
     </div>
   </div>
 </section>
 
 <style>
-  .hb{
+  .hb {
     background: #ffffff;
     padding: 6rem 1.5rem;
   }
 
-  .hb_container{
+  .hb__container {
+    max-width: 1200px;
     margin: 0 auto;
-    display: grid;    
+    display: grid;
+    grid-template-columns: 380px 1fr;
     gap: 5rem;
     align-items: center;
   }
 
-  .hb_eyerbrow{
+  .hb__eyebrow {
     display: inline-block;
     color: #C9A84C;
     font-size: 0.8rem;
@@ -68,7 +103,7 @@ const items = [
     margin-bottom: 0.75rem;
   }
 
-  .hb_titulo{
+  .hb__titulo {
     color: #1B3A6B;
     font-size: clamp(1.75rem, 3.5vw, 2.5rem);
     font-weight: 700;
@@ -77,33 +112,103 @@ const items = [
     margin-bottom: 1rem;
   }
 
-  .hb_divider{
+  .hb__divider {
     width: 50px;
     height: 3px;
     background: #C9A84C;
     border-radius: 2px;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
 
-  .hb_desc{
+  .hb__desc {
     color: #555555;
-    font-size: 1rem;
+    font-size: 0.95rem;
     line-height: 1.8;
     margin: 0;
   }
 
-  /* ── Responsive ── */
+  .hb__desc--mt {
+    margin-top: 1rem;
+  }
+
+  .hb__features {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .hb__feature {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #1B3A6B;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .hb__feature i {
+    font-size: 1.1rem;
+    color: #C9A84C;
+    flex-shrink: 0;
+  }
+
+  .hb__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #1B3A6B;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.75rem 1.75rem;
+    border-radius: 6px;
+    transition: background 0.2s, gap 0.2s;
+  }
+
+  .hb__btn:hover {
+    background: #C9A84C;
+    color: #1B3A6B;
+    gap: 0.85rem;
+  }
+
+  .hb__btn i {
+    transition: transform 0.2s;
+  }
+
+  .hb__btn:hover i {
+    transform: translateX(4px);
+  }
+
+  .hb__galeria {
+    width: 100%;
+  }
+
   @media (max-width: 768px) {
-    .mv {
-      padding: 4rem 1.25rem;
-    }
+  .hb {
+    padding: 4rem 1.25rem;
+  }
 
-    .mv__grid {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
+  .hb__container {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
 
-    .mv__card {
-      padding: 2rem 1.5rem;
-    }
+  .hb__galeria {
+    width: 100%;
+    min-height: 400px;
+  }
+
+  .hb__features {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hb__btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
 </style>
