@@ -2,31 +2,108 @@
 import AccordionGallery from "../habitaciones/AccordionGallery";
 
 const items = [
-  { image: 'https://picsum.photos/id/1015/900/1200', label: 'Canyon', link: '#' },
+  { image: '/images/hero/ParqueoCAA.jpeg', label: 'Habitación Individual', link: '#' },
   { image: 'https://picsum.photos/id/1018/900/1200', label: 'Ridgeline', link: '#' },
-  { image: 'https://picsum.photos/id/1039/900/1200', label: 'Falls', link: '#' },
-  { image: 'https://picsum.photos/id/1043/900/1200', label: 'Harbour', link: '#' },
-  { image: 'https://picsum.photos/id/1044/900/1200', label: 'Skyline', link: '#' }
+  { image: 'https://picsum.photos/id/1039/900/1200', label: 'Falls', link: '#' }
 ];
 ---
-<AccordionGallery
-client:only="react" 
-  items={items}
-  defaultIndex={2}
-  expandRatio={0.3}
-  trigger="hover"
-  accentColor="#ffffff"
-  overlayColor="#060010"
-  textColor="#ffffff"
-  grayscale
-  showLabels
-  duration={0.6}
-  ease="power3.out"
-  parallax={0.5}
-  tilt={0}
-  stagger={0.06}
-  height={460}
-  gap={5}
-  radius={16}
-  orientation="horizontal"
-/>
+
+<section class="hb">
+  <div class="hb_container">
+    <div class="hb_texto">
+      <span class="hb_eyerbrow">Conoce nuestras habitaciones</span>
+      <h2 class="hb_titulo">Habitaciones</h2>
+      <div class=hb_divider></div>
+      <p class="hb_desc">
+        Contamos con diferentes habitaciones
+      </p>
+    </div>
+    <div class="hb_images">
+      <AccordionGallery
+      client:only="react" 
+        items={items}
+        defaultIndex={1}
+        expandRatio={0.6}
+        trigger="hover"
+        accentColor="#ffffff"
+        overlayColor="#060010"
+        textColor="#ffffff"
+        grayscale
+        showLabels
+        duration={0.6}
+        ease="sine.inOut"
+        parallax={0.2}
+        tilt={0}
+        stagger={0.1}
+        height={480}
+        gap={10}
+        radius={20}
+        orientation="horizontal"
+      />
+      <button>Ver más</button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hb{
+    background: #ffffff;
+    padding: 6rem 1.5rem;
+  }
+
+  .hb_container{
+    margin: 0 auto;
+    display: grid;    
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .hb_eyerbrow{
+    display: inline-block;
+    color: #C9A84C;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .hb_titulo{
+    color: #1B3A6B;
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 700;
+    font-family: Georgia, serif;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+
+  .hb_divider{
+    width: 50px;
+    height: 3px;
+    background: #C9A84C;
+    border-radius: 2px;
+    margin-bottom: 2rem;
+  }
+
+  .hb_desc{
+    color: #555555;
+    font-size: 1rem;
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .mv {
+      padding: 4rem 1.25rem;
+    }
+
+    .mv__grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .mv__card {
+      padding: 2rem 1.5rem;
+    }
+</style>
