@@ -1,0 +1,73 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Habitaciones">
+    <section class="page-hero">
+        <div class="page-hero__overlay"/>
+        <div class="page-hero__content">
+            <h1 class="page-hero__title">Habitaciones</h1>
+            <p class="page-hero__subtitle">Conoce más sobre nuestras habitaciones</p>
+        </div>
+    </section>
+</BaseLayout>
+
+<style>
+    .page-hero{
+        position: relative;
+        padding-top: 72px;
+        height: 420px;
+        background-image: url("/images/hero/ParqueoHotel.jpg");
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .page-hero__overlay{
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            135deg,
+            rgba(27, 58, 107, 0.70) 0%,
+            rgba(18, 40, 80, 0.60) 100%
+        );
+    }
+
+    .page-hero__content{
+        position: relative;
+        z-index: 1;
+        padding: 0 1.5rem;
+    }
+
+    .page-hero__title{
+        color: #ffffff;
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 700;
+        font-family: Georgia, serif;
+        line-height: 1.2;
+        margin-bottom: 1rem;
+    }
+
+    .page-hero__subtitle{
+        color: rgba(255, 255, 255, 0.80);
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+    .page-hero {
+      height: 320px;
+    }
+
+    .page-hero__title {
+      font-size: clamp(2rem, 8vw, 2.5rem);
+    }
+
+    .page-hero__subtitle {
+      font-size: 0.95rem;
+    }
+  }
+</style>
