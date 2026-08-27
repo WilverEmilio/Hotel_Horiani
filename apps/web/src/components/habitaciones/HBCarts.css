@@ -194,3 +194,9 @@
     pointer-events: auto;
   }
 }
+
+.hcard__btn {
+  border: none;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+}

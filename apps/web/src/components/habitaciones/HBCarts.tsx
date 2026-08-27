@@ -1,5 +1,6 @@
 import { useState } from "react"
 import "./HBCarts.css"
+import {Modal} from "./detalleHB";
 
 const CORNER_PATH = "M0 200C155.996 199.961 200.029 156.308 200 0V200H0Z"
 
@@ -9,7 +10,6 @@ interface Habitacion {
   label: string
   titulo: string
   desc: string
-  link: string
 }
 
 const habitaciones: Habitacion[] = [
@@ -19,7 +19,6 @@ const habitaciones: Habitacion[] = [
     label: "Individual",
     titulo: "Habitación Individual",
     desc: "Perfecta para viajeros solos. Cama individual, baño privado y WiFi gratuito incluido.",
-    link: "/reservar",
   },
   {
     image: "/images/Gallery/pasillo2.jpeg",
@@ -27,7 +26,7 @@ const habitaciones: Habitacion[] = [
     label: "Doble",
     titulo: "Habitación Doble",
     desc: "Ideal para parejas o compañeros de viaje. Dos camas, baño privado y vista a la ciudad.",
-    link: "/reservar",
+
   },
   {
     image: "/images/Gallery/pasillo4.jpeg",
@@ -35,7 +34,6 @@ const habitaciones: Habitacion[] = [
     label: "Suite",
     titulo: "Suite Ejecutiva",
     desc: "Nuestra habitación más espaciosa. Sala de estar, escritorio y vista panorámica a Quetzaltenango.",
-    link: "/reservar",
   },
   
 ]
@@ -57,6 +55,7 @@ function Corner({ className }: { className?: string }) {
 
 function HabitacionCard({ h }: { h: Habitacion }) {
   const [hovered, setHovered] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div
@@ -87,12 +86,19 @@ function HabitacionCard({ h }: { h: Habitacion }) {
         <p className="hcard__desc">{h.desc}</p>
 
         <div className="hcard__footer">
-          <a 
-            href={h.link}
+          <button
+            type="button"
+            onClick={() => setIsModalOpen(true)}
             className={`hcard__btn${hovered ? " hcard__btn--visible" : ""}`}
           >
             Detalle →
-          </a>
+          </button>
+          <Modal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            title = {h.titulo} 
+            children
+          />
         </div>
       </div>
     </div>
