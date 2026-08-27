@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-
+import HabitacionesCard from "../components/habitaciones/HBCarts"
 ---
 
 <BaseLayout title="Habitaciones">
@@ -12,6 +12,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
     </section>
 </BaseLayout>
+<HabitacionesCard client:only="react"></HabitacionesCard>
 
 <style>
     .page-hero{

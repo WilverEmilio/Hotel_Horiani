@@ -1,0 +1,196 @@
+/* ── Grid ── */
+.hcards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ── Card ── */
+.hcard {
+  border-radius: 20px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 0.5px solid #eeeeee;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+              transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  animation: hcardIn 0.4s ease forwards;
+  opacity: 0;
+}
+
+@keyframes hcardIn {
+  to { opacity: 1; }
+}
+
+.hcard--hovered {
+  box-shadow: 0 16px 48px rgba(27, 58, 107, 0.15);
+  transform: translateY(-5px);
+}
+
+/* ── Media ── */
+.hcard__media {
+  position: relative;
+  height: 260px;
+  overflow: hidden;
+}
+
+.hcard__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.hcard--hovered .hcard__img {
+  transform: scale(1.06);
+}
+
+/* ── Overlay ── */
+.hcard__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(18, 40, 80, 0.70) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+/* ── Pin badge — arriba derecha ── */
+.hcard__pin {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #C9A84C;
+  color: #1B3A6B;
+  padding: 0.35rem 0.875rem;
+  border-radius: 0 0 0 12px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── Label — abajo izquierda ── */
+.hcard__label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: #ffffff;
+  color: #555555;
+  padding: 0.4rem 1rem;
+  border-radius: 0 12px 0 0;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* esquinas recortadas SVG */
+.hcard__corner {
+  position: absolute;
+  color: #ffffff;
+}
+
+.hcard__corner--right {
+  right: -27px;
+  bottom: 0;
+  transform: rotate(90deg);
+}
+
+.hcard__corner--top {
+  top: -27px;
+  left: 0;
+  transform: rotate(90deg);
+}
+
+/* ── Contenido ── */
+.hcard__content {
+  padding: 1.5rem;
+}
+
+.hcard__titulo {
+  color: #1B3A6B;
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: Georgia, serif;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.hcard__desc {
+  color: #666666;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
+}
+
+/* ── Footer ── */
+.hcard__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hcard__precio {
+  color: #C9A84C;
+  font-weight: 700;
+  font-size: 1rem;
+  font-family: Georgia, serif;
+}
+
+/* ── Botón — aparece en hover ── */
+.hcard__btn {
+  background: #1B3A6B;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.24s ease,
+              transform 0.24s ease,
+              background 0.2s ease;
+  pointer-events: none;
+}
+
+.hcard__btn--visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.hcard__btn:hover {
+  background: #C9A84C;
+  color: #1B3A6B;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .hcards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .hcards {
+    grid-template-columns: 1fr;
+  }
+
+  .hcard__media {
+    height: 220px;
+  }
+
+  /* en móvil el botón siempre visible — no hay hover en touch */
+  .hcard__btn {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+}
