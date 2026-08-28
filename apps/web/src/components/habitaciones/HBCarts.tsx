@@ -1,11 +1,11 @@
 import { useState } from "react"
 import "./HBCarts.css"
-import {Modal} from "./detalleHB";
+import {GaleriaModal, Modal} from "./detalleHB";
 
 const CORNER_PATH = "M0 200C155.996 199.961 200.029 156.308 200 0V200H0Z"
 
 interface Habitacion {
-  image: string
+  image: string[]
   badge: string
   label: string
   titulo: string
@@ -14,14 +14,14 @@ interface Habitacion {
 
 const habitaciones: Habitacion[] = [
   {
-    image: "/images/Gallery/pasillo1.jpeg",
+    image: ["/images/Gallery/pasillo1.jpeg", "/images/Gallery/pasillo4.jpeg", "/images/Gallery/pasillo2.jpeg"],
     badge: "Popular",
     label: "Individual",
     titulo: "Habitación Individual",
     desc: "Perfecta para viajeros solos. Cama individual, baño privado y WiFi gratuito incluido.",
   },
   {
-    image: "/images/Gallery/pasillo2.jpeg",
+    image: ["/images/Gallery/pasillo2.jpeg","/images/Gallery/pasillo4.jpeg","/images/Gallery/pasillo1.jpeg"],
     badge: "Popular",
     label: "Doble",
     titulo: "Habitación Doble",
@@ -29,7 +29,7 @@ const habitaciones: Habitacion[] = [
 
   },
   {
-    image: "/images/Gallery/pasillo4.jpeg",
+    image: ["/images/Gallery/pasillo4.jpeg","/images/Gallery/pasillo1.jpeg","/images/Gallery/pasillo2.jpeg"],
     badge: "Popular",
     label: "Suite",
     titulo: "Suite Ejecutiva",
@@ -65,7 +65,7 @@ function HabitacionCard({ h }: { h: Habitacion }) {
     >
       <div className="hcard__media">
         <img
-          src={h.image}
+          src={h.image[0]}
           alt={h.titulo}
           className="hcard__img"
           draggable={false}
@@ -104,7 +104,7 @@ function HabitacionCard({ h }: { h: Habitacion }) {
       }}
       title={h.titulo}
       >
-        <img src={h.image} alt={h.titulo} className="imge_modal"/>
+        <GaleriaModal images={h.image}/>
         <p className="p_modal">
           {h.desc}
         </p>

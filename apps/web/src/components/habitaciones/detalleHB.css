@@ -81,3 +81,36 @@
   line-height: 1.8;
   margin: 0;
 }
+
+.galeria {
+    margin-bottom: 1.25rem;
+}
+
+.galeria__main{
+    position: relative;
+    height: 220px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+}
+
+.galeria__img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.2s ease;
+}
+
+.galeria__counter{
+    position: absolute;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    background: rgba(0,0,0,0,55);
+    color:  #ffffff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+}

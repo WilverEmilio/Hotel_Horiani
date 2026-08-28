@@ -1,67 +1,141 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+import BaseLayout from "../layouts/BaseLayout.astro"
 import HabitacionesCard from "../components/habitaciones/HBCarts"
 ---
 
 <BaseLayout title="Habitaciones">
-    <section class="page-hero">
-        <div class="page-hero__overlay"/>
-        <div class="page-hero__content">
-            <h1 class="page-hero__title">Habitaciones</h1>
-            <p class="page-hero__subtitle">Conoce más sobre nuestras habitaciones</p>
-        </div>
-    </section>
+  <section class="page-hero">
+    <div class="page-hero__overlay" />
+    <div class="page-hero__content">
+      <span class="page-hero__eyebrow">Hotel Horiani</span>
+      <h1 class="page-hero__title">Habitaciones</h1>
+      <p class="page-hero__subtitle">
+        Descansa en espacios diseñados para tu comodidad
+      </p>
+    </div>
+  </section>
+  <section class="hb-section">
+    <div class="hb-section__header">
+      <span class="hb-section__eyebrow">Elige tu espacio</span>
+      <h2 class="hb-section__titulo">Nuestras Habitaciones</h2>
+      <div class="hb-section__divider"></div>
+      <p class="hb-section__desc">
+        Contamos con diferentes tipos de habitaciones para adaptarnos
+        a tus necesidades. Todas incluyen baño privado, WiFi gratuito
+        y servicio de limpieza diario.
+      </p>
+    </div>
+    <HabitacionesCard client:only="react" />
+  </section>
+
 </BaseLayout>
-<HabitacionesCard client:only="react"></HabitacionesCard>
 
 <style>
-    .page-hero{
-        position: relative;
-        padding-top: 72px;
-        height: 420px;
-        background-image: url("/images/hero/ParqueoHotel.jpg");
-        background-size: cover;
-        background-position: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-    }
+  /* ── Hero ── */
+  .page-hero {
+    position: relative;
+    padding-top: 72px;
+    height: 460px;
+    background-image: url("/images/hero/ParqueoHotel.jpg");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
 
-    .page-hero__overlay{
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-            135deg,
-            rgba(27, 58, 107, 0.70) 0%,
-            rgba(18, 40, 80, 0.60) 100%
-        );
-    }
+  .page-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(27, 58, 107, 0.72) 0%,
+      rgba(18, 40, 80, 0.62) 100%
+    );
+  }
 
-    .page-hero__content{
-        position: relative;
-        z-index: 1;
-        padding: 0 1.5rem;
-    }
+  .page-hero__content {
+    position: relative;
+    z-index: 1;
+    padding: 0 1.5rem;
+  }
 
-    .page-hero__title{
-        color: #ffffff;
-        font-size: clamp(2.5rem, 5vw, 4rem);
-        font-weight: 700;
-        font-family: Georgia, serif;
-        line-height: 1.2;
-        margin-bottom: 1rem;
-    }
+  .page-hero__eyebrow {
+    display: inline-block;
+    color: #C9A84C;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
 
-    .page-hero__subtitle{
-        color: rgba(255, 255, 255, 0.80);
-        font-size: 1.1rem;
-        line-height: 1.6;
-    }
+  .page-hero__title {
+    color: #ffffff;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    font-family: Georgia, serif;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
 
-    @media (max-width: 768px) {
+  .page-hero__subtitle {
+    color: rgba(255, 255, 255, 0.80);
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+
+  /* ── Sección cards ── */
+  .hb-section {
+    background: #f8f7f4;
+    padding: 5rem 1.5rem;
+  }
+
+  .hb-section__header {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 3.5rem;
+  }
+
+  .hb-section__eyebrow {
+    display: inline-block;
+    color: #C9A84C;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .hb-section__titulo {
+    color: #1B3A6B;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 700;
+    font-family: Georgia, serif;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .hb-section__divider {
+    width: 50px;
+    height: 3px;
+    background: #C9A84C;
+    border-radius: 2px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .hb-section__desc {
+    color: #555555;
+    font-size: 1rem;
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
     .page-hero {
-      height: 320px;
+      height: 360px;
     }
 
     .page-hero__title {
@@ -70,6 +144,10 @@ import HabitacionesCard from "../components/habitaciones/HBCarts"
 
     .page-hero__subtitle {
       font-size: 0.95rem;
+    }
+
+    .hb-section {
+      padding: 4rem 1.25rem;
     }
   }
 </style>
