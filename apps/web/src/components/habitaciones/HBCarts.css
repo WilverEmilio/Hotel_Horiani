@@ -200,3 +200,17 @@
   cursor: pointer;
   font-family: Arial, sans-serif;
 }
+
+.imge_modal{
+  width: "auto";
+  height: "auto";
+  object-fit: cover;
+  border-radius: "8px";
+  margin-bottom: "1rem";
+}
+
+.p_modal{
+  color: #555;
+  font-size: "0.95rem";
+  line-height: 1.8;
+}

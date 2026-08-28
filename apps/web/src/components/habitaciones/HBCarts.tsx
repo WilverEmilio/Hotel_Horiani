@@ -88,19 +88,27 @@ function HabitacionCard({ h }: { h: Habitacion }) {
         <div className="hcard__footer">
           <button
             type="button"
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => {setIsModalOpen(true) 
+              setHovered(false)} }
             className={`hcard__btn${hovered ? " hcard__btn--visible" : ""}`}
           >
             Detalle →
           </button>
-          <Modal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            title = {h.titulo} 
-            children
-          />
         </div>
       </div>
+
+      <Modal
+      isOpen={isModalOpen}
+      onClose={()=> {setIsModalOpen(false)
+        setHovered(false)
+      }}
+      title={h.titulo}
+      >
+        <img src={h.image} alt={h.titulo} className="imge_modal"/>
+        <p className="p_modal">
+          {h.desc}
+        </p>
+      </Modal>
     </div>
   )
 }
