@@ -1,0 +1,26 @@
+[
+{
+    "image": ["/images/Gallery/pasillo1.jpeg", "/images/Gallery/pasillo4.jpeg", "/images/Gallery/pasillo2.jpeg"],
+    "badge": "Popular",
+    "label": "Individual",
+    "titulo": "Habitación Individual",
+    "desc": "Perfecta para viajeros solos. Cama individual, baño privado y WiFi gratuito incluido.",
+    "servicios": ["WiFi", "Baño privado", "TV por cable"]
+  },
+  {
+    "image": ["/images/Gallery/pasillo2.jpeg","/images/Gallery/pasillo4.jpeg","/images/Gallery/pasillo1.jpeg"],
+    "badge": "Popular",
+    "label": "Doble",
+    "titulo": "Habitación Doble",
+    "desc": "Ideal para parejas o compañeros de viaje. Dos camas, baño privado y vista a la ciudad.",
+    "servicios": ["WiFi", "Baño privado", "TV por cable"]
+  },
+  {
+    "image": ["/images/Gallery/pasillo4.jpeg","/images/Gallery/pasillo1.jpeg","/images/Gallery/pasillo2.jpeg"],
+    "badge": "Popular",
+    "label": "Suite",
+    "titulo": "Suite Ejecutiva",
+    "desc": "Nuestra habitación más espaciosa. Sala de estar, escritorio y vista panorámica a Quetzaltenango.",
+    "servicios": ["WiFi", "Baño privado", "TV por cable", "Sala de estar"]
+  }
+]

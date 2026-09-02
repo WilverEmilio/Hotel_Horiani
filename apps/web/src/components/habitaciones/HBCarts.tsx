@@ -1,42 +1,19 @@
 import { useState } from "react"
 import "./HBCarts.css"
 import {GaleriaModal, Modal} from "./detalleHB";
+import habitaciones from "../../data/habitaciones.json"
+
+interface Habitacion {
+  titulo: string
+  desc: string
+  image: string[]
+  label: string
+  badge: string
+  servicios?: string[]
+}
 
 const CORNER_PATH = "M0 200C155.996 199.961 200.029 156.308 200 0V200H0Z"
 
-interface Habitacion {
-  image: string[]
-  badge: string
-  label: string
-  titulo: string
-  desc: string
-}
-
-const habitaciones: Habitacion[] = [
-  {
-    image: ["/images/Gallery/pasillo1.jpeg", "/images/Gallery/pasillo4.jpeg", "/images/Gallery/pasillo2.jpeg"],
-    badge: "Popular",
-    label: "Individual",
-    titulo: "Habitación Individual",
-    desc: "Perfecta para viajeros solos. Cama individual, baño privado y WiFi gratuito incluido.",
-  },
-  {
-    image: ["/images/Gallery/pasillo2.jpeg","/images/Gallery/pasillo4.jpeg","/images/Gallery/pasillo1.jpeg"],
-    badge: "Popular",
-    label: "Doble",
-    titulo: "Habitación Doble",
-    desc: "Ideal para parejas o compañeros de viaje. Dos camas, baño privado y vista a la ciudad.",
-
-  },
-  {
-    image: ["/images/Gallery/pasillo4.jpeg","/images/Gallery/pasillo1.jpeg","/images/Gallery/pasillo2.jpeg"],
-    badge: "Popular",
-    label: "Suite",
-    titulo: "Suite Ejecutiva",
-    desc: "Nuestra habitación más espaciosa. Sala de estar, escritorio y vista panorámica a Quetzaltenango.",
-  },
-  
-]
 
 function Corner({ className }: { className?: string }) {
   return (
@@ -108,6 +85,32 @@ function HabitacionCard({ h }: { h: Habitacion }) {
         <p className="p_modal">
           {h.desc}
         </p>
+
+        {h.servicios && h.servicios.length > 0 && (
+          <div className="servicios_modal">
+            <h3 className="servicios_modal__title">
+              Servicios incluidos
+            </h3>
+
+            <ul className="servicios_modal__list">
+              {h.servicios.map((servicio, index) => (
+                <li
+                  key={index}
+                  className="servicios_modal__item"
+                >
+                  <span className="servicios_modal__icon">
+                    ✓
+                  </span>
+
+                  <span className="servicios_modal__text">
+                    {servicio}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
       </Modal>
     </div>
   )

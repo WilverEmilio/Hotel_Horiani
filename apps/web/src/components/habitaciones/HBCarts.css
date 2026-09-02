@@ -1,4 +1,3 @@
-/* ── Grid ── */
 .hcards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -7,7 +6,6 @@
   margin: 0 auto;
 }
 
-/* ── Card ── */
 .hcard {
   border-radius: 20px;
   overflow: hidden;
@@ -48,7 +46,6 @@
   transform: scale(1.06);
 }
 
-/* ── Overlay ── */
 .hcard__overlay {
   position: absolute;
   inset: 0;
@@ -60,7 +57,6 @@
   pointer-events: none;
 }
 
-/* ── Pin badge — arriba derecha ── */
 .hcard__pin {
   position: absolute;
   top: 0;
@@ -75,7 +71,6 @@
   text-transform: uppercase;
 }
 
-/* ── Label — abajo izquierda ── */
 .hcard__label {
   position: absolute;
   bottom: 0;
@@ -107,7 +102,6 @@
   transform: rotate(90deg);
 }
 
-/* ── Contenido ── */
 .hcard__content {
   padding: 1.5rem;
 }
@@ -128,18 +122,10 @@
   margin-bottom: 1.25rem;
 }
 
-/* ── Footer ── */
 .hcard__footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.hcard__precio {
-  color: #C9A84C;
-  font-weight: 700;
-  font-size: 1rem;
-  font-family: Georgia, serif;
 }
 
 .hcard__btn {
@@ -169,7 +155,6 @@
   color: #1B3A6B;
 }
 
-/* ── Responsive ── */
 @media (max-width: 900px) {
   .hcards {
     grid-template-columns: repeat(2, 1fr);
@@ -185,7 +170,6 @@
     height: 220px;
   }
 
-  /* en móvil el botón siempre visible — no hay hover en touch */
   .hcard__btn {
     opacity: 1;
     transform: none;
@@ -199,16 +183,3 @@
   font-family: Arial, sans-serif;
 }
 
-.imge_modal{
-  width: "auto";
-  height: "auto";
-  object-fit: cover;
-  border-radius: "8px";
-  margin-bottom: "1rem";
-}
-
-.p_modal{
-  color: #555;
-  font-size: "0.95rem";
-  line-height: 1.8;
-}
