@@ -27,17 +27,17 @@ export function GaleriaModal({images}: GaleriaProps){
                         type='button'
                         className='galeria__arrow galeria__arrow--prev'
                         onClick={()=> setActive(i => (i - 1 + images.length)%images.length)}
-                        arial-label="Anterior"
+                        aria-label="Anterior"
                         >
-                            ,
+                            ←
                         </button>
                         <button
                         type='button'
                         className='galeria__arrow galeria__arrow--next'
                         onClick={()=> setActive(i => (i + 1)%images.length)}
-                        arial-label="Siguiente"
+                        aria-label="Siguiente"
                         >
-                            ,
+                            →
                         </button>
                     </>
                 )}
@@ -56,7 +56,7 @@ export function GaleriaModal({images}: GaleriaProps){
                         type='button'
                         className={`galeria__thumb${i === active ? " galeria__thumb--active" : ""}`}
                         onClick={()=>setActive(i)}
-                        arial-label={`Foto ${i + 1}`}
+                        aria-label={`Foto ${i + 1}`}
                         >
                             <img src={src} alt={`Miniatura ${i + 1}`} />
                         </button>

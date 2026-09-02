@@ -90,10 +90,9 @@
   text-transform: uppercase;
 }
 
-/* esquinas recortadas SVG */
 .hcard__corner {
   position: absolute;
-  color: #ffffff;
+  color: #000000;
 }
 
 .hcard__corner--right {
@@ -143,7 +142,6 @@
   font-family: Georgia, serif;
 }
 
-/* ── Botón — aparece en hover ── */
 .hcard__btn {
   background: #1B3A6B;
   color: #ffffff;

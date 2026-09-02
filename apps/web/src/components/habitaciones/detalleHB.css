@@ -20,10 +20,15 @@
   border-radius: 16px;
   width: 90%;
   max-width: 500px;
-  max-height: 90vh;
+  max-height: 95vh;
   overflow-y: auto;
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.25);
   animation: modalIn 0.15s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  scrollbar-width: none;
+}
+
+.modal-container::-webkit-scrollbar {
+  display: none;
 }
 
 @keyframes modalIn {
@@ -71,7 +76,7 @@
   height: 200px;
   object-fit: cover;
   border-radius: 10px;
-  display: block;
+  display: flex;
   margin-bottom: 1rem;
 }
 
@@ -87,26 +92,90 @@
 }
 
 .galeria__main{
-    position: relative;
-    height: 220px;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 0.75rem;
+  position: relative;
+  height: 220px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+  flex-shrink: 0;
+  
 }
 
 .galeria__img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: opacity 0.2s ease;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  display: flex;
 }
+
+.galeria_thumbs{
+  display: flex; 
+  flex-direction: row;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  flex-shrink: 0;
+}
+
+.galeria__thumb{
+  flex-shrink: 0;
+  width: 64px; 
+  height: 64px;
+  border-radius: 6px;
+  overflow: hidden; 
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+  transition: border-color 0.2s;
+  display: flex;
+}
+
+.galeria__thumb img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: flex;
+}
+
+.galeria__thumb--active {
+  border-color: #000000;
+}
+
+.galeria__arrow{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(255,255,255, 0.90);
+  border: none;
+  color: #010408;
+  font-size: 1.75rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  line-height: 1;
+  padding-bottom: 2px;
+}
+
+.galeria__arrow:hover{
+  background: rgba(255,255,255, 1);
+}
+
+.galeria__arrow--prev { left: 0.75rem; }
+.galeria__arrow--next { right: 0.75rem; }
 
 .galeria__counter{
     position: absolute;
     bottom: 0.75rem;
     right: 0.75rem;
-    background: rgba(0,0,0,0,55);
+    background: rgba(0,0,0,0.55);
     color:  #ffffff;
     font-size: 0.75rem;
     font-weight: 600;
