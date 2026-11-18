@@ -1,17 +1,23 @@
 -- =============================================================================
 -- 001_extensiones.sql
--- Hotel Horiani - Extensiones y funciones comunes de trigger.
+-- Hotel Horiani - Extensiones, esquema interno, control de versiones y
+-- funciones comunes de trigger.
 -- Ejecutar sobre una base de datos vacía, en orden numérico.
 -- =============================================================================
 
--- citext: correos y códigos sin distinguir mayúsculas de minúsculas.
 CREATE EXTENSION IF NOT EXISTS citext;
-
--- btree_gist: permite restricciones EXCLUDE que combinan igualdad (id) con
--- traslape de rangos de fechas. Es la base de "no dar una habitación ya reservada".
 CREATE EXTENSION IF NOT EXISTS btree_gist;
 
--- Mantiene la columna actualizado_en en las tablas editables.
+CREATE SCHEMA IF NOT EXISTS interno;
+
+CREATE TABLE version_esquema (
+    id_version_esquema  INTEGER GENERATED ALWAYS AS IDENTITY,
+    script              VARCHAR(100) NOT NULL,
+    aplicado_en         TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    CONSTRAINT pk_version_esquema PRIMARY KEY (id_version_esquema),
+    CONSTRAINT uq_version_esquema_script UNIQUE (script)
+);
+
 CREATE OR REPLACE FUNCTION tg_comun_actualizado_en()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -22,7 +28,6 @@ BEGIN
 END;
 $$;
 
--- Vuelve una tabla de solo inserción (bitácora, movimientos de inventario).
 CREATE OR REPLACE FUNCTION tg_comun_bloquear_cambios()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -32,3 +37,15 @@ BEGIN
         USING ERRCODE = 'restrict_violation';
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION tg_comun_no_eliminar()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RAISE EXCEPTION 'Los registros de % no se eliminan; deben desactivarse o cancelarse', TG_TABLE_NAME
+        USING ERRCODE = 'restrict_violation';
+END;
+$$;
+
+INSERT INTO version_esquema (script) VALUES ('001_extensiones.sql');

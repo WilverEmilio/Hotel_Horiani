@@ -14,7 +14,6 @@ CREATE TABLE rol (
         ('cliente', 'administrador', 'operador', 'oficinista', 'limpieza', 'lavanderia'))
 );
 
--- Catálogo fijo: forma parte de la estructura, no de los datos de prueba.
 INSERT INTO rol (nombre, descripcion) VALUES
     ('cliente',       'Reserva, paga y consulta sus propias reservaciones'),
     ('administrador', 'Acceso total: precios, habitaciones, empleados, inventario, contenido web y bitácora'),
@@ -23,11 +22,96 @@ INSERT INTO rol (nombre, descripcion) VALUES
     ('limpieza',      'Habitaciones asignadas, tareas de limpieza, reporte de daños y consumo de insumos'),
     ('lavanderia',    'Control de blancos: recepción, devolución, bajas y faltantes');
 
+CREATE TABLE permiso (
+    id_permiso   SMALLINT GENERATED ALWAYS AS IDENTITY,
+    codigo       VARCHAR(40)  NOT NULL,
+    descripcion  VARCHAR(200) NOT NULL,
+    creado_en    TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    CONSTRAINT pk_permiso PRIMARY KEY (id_permiso),
+    CONSTRAINT uq_permiso_codigo UNIQUE (codigo),
+    CONSTRAINT ck_permiso_codigo CHECK (codigo ~ '^[A-Z]+(_[A-Z]+)*$')
+);
+
+CREATE TABLE rol_permiso (
+    id_rol      SMALLINT     NOT NULL,
+    id_permiso  SMALLINT     NOT NULL,
+    creado_en   TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    CONSTRAINT pk_rol_permiso PRIMARY KEY (id_rol, id_permiso),
+    CONSTRAINT fk_rol_permiso_rol FOREIGN KEY (id_rol) REFERENCES rol (id_rol),
+    CONSTRAINT fk_rol_permiso_permiso FOREIGN KEY (id_permiso) REFERENCES permiso (id_permiso)
+);
+
+CREATE INDEX ix_rol_permiso_permiso ON rol_permiso (id_permiso);
+
+INSERT INTO permiso (codigo, descripcion) VALUES
+    ('RESERVAR',                'Reservar, pagar, ver y cancelar sus propias reservaciones'),
+    ('RESERVACIONES_GESTIONAR', 'Crear, modificar, cancelar y reasignar reservaciones; check-in y check-out'),
+    ('PAGOS_REGISTRAR',         'Registrar cobros del saldo en el hotel'),
+    ('PAGOS_VER',               'Consultar pagos y reembolsos'),
+    ('CLIENTES_GESTIONAR',      'Registrar, consultar y editar clientes'),
+    ('HABITACIONES_VER',        'Consultar habitaciones y su estado'),
+    ('HABITACIONES_ESTADO',     'Cambiar el estado operativo de una habitación'),
+    ('HABITACIONES_GESTIONAR',  'Administrar tipos de habitación, habitaciones y servicios'),
+    ('PRECIOS_GESTIONAR',       'Modificar precio base y tarifas especiales'),
+    ('CUPONES_GESTIONAR',       'Administrar cupones'),
+    ('EMPLEADOS_GESTIONAR',     'Administrar empleados, turnos y usuarios del personal'),
+    ('ASISTENCIA_REGISTRAR',    'Registrar la asistencia del personal'),
+    ('INVENTARIO_GESTIONAR',    'Artículos, entradas, salidas y ajustes de inventario'),
+    ('INSUMOS_CONSUMIR',        'Registrar consumo de insumos en habitaciones'),
+    ('LAVANDERIA_GESTIONAR',    'Recepción, devolución, bajas y faltantes de blancos'),
+    ('LIMPIEZA_GESTIONAR',      'Tareas de limpieza de habitaciones'),
+    ('MANTENIMIENTO_REPORTAR',  'Reportar daños y fallas'),
+    ('MANTENIMIENTO_GESTIONAR', 'Atender reportes y bloquear habitaciones por mantenimiento'),
+    ('REPORTES_VER',            'Dashboard y reportes'),
+    ('CONTENIDO_WEB_GESTIONAR', 'Editar el contenido de la página web'),
+    ('HOTELES_GESTIONAR',       'Administrar hoteles y su configuración'),
+    ('USUARIOS_GESTIONAR',      'Activar y desactivar usuarios'),
+    ('BITACORA_VER',            'Consultar la bitácora');
+
+INSERT INTO rol_permiso (id_rol, id_permiso)
+SELECT r.id_rol, p.id_permiso
+  FROM (VALUES
+        ('cliente',    'RESERVAR'),
+
+        ('operador',   'RESERVACIONES_GESTIONAR'),
+        ('operador',   'PAGOS_REGISTRAR'),
+        ('operador',   'CLIENTES_GESTIONAR'),
+        ('operador',   'HABITACIONES_VER'),
+        ('operador',   'HABITACIONES_ESTADO'),
+        ('operador',   'MANTENIMIENTO_REPORTAR'),
+        ('operador',   'MANTENIMIENTO_GESTIONAR'),
+
+        ('oficinista', 'RESERVACIONES_GESTIONAR'),
+        ('oficinista', 'PAGOS_REGISTRAR'),
+        ('oficinista', 'PAGOS_VER'),
+        ('oficinista', 'CLIENTES_GESTIONAR'),
+        ('oficinista', 'HABITACIONES_VER'),
+        ('oficinista', 'HABITACIONES_ESTADO'),
+        ('oficinista', 'CUPONES_GESTIONAR'),
+        ('oficinista', 'ASISTENCIA_REGISTRAR'),
+        ('oficinista', 'MANTENIMIENTO_REPORTAR'),
+        ('oficinista', 'MANTENIMIENTO_GESTIONAR'),
+        ('oficinista', 'REPORTES_VER'),
+
+        ('limpieza',   'HABITACIONES_VER'),
+        ('limpieza',   'LIMPIEZA_GESTIONAR'),
+        ('limpieza',   'INSUMOS_CONSUMIR'),
+        ('limpieza',   'MANTENIMIENTO_REPORTAR'),
+
+        ('lavanderia', 'LAVANDERIA_GESTIONAR'),
+        ('lavanderia', 'MANTENIMIENTO_REPORTAR')
+       ) AS m (rol, permiso)
+  JOIN rol r ON r.nombre = m.rol
+  JOIN permiso p ON p.codigo = m.permiso;
+
+INSERT INTO rol_permiso (id_rol, id_permiso)
+SELECT r.id_rol, p.id_permiso
+  FROM rol r CROSS JOIN permiso p
+ WHERE r.nombre = 'administrador' AND p.codigo <> 'RESERVAR';
+
 CREATE TABLE usuario (
     id_usuario         BIGINT GENERATED ALWAYS AS IDENTITY,
     correo             CITEXT       NOT NULL,
-    -- NULL solo mientras el cliente no ha definido su contraseña (cuenta creada
-    -- en recepción con su correo). Sin contraseña no se puede iniciar sesión.
     contrasena_hash    VARCHAR(255),
     id_rol             SMALLINT     NOT NULL,
     intentos_fallidos  INTEGER      NOT NULL DEFAULT 0,
@@ -47,9 +131,10 @@ CREATE TRIGGER tr_usuario_actualizado_en
     BEFORE UPDATE ON usuario
     FOR EACH ROW EXECUTE FUNCTION tg_comun_actualizado_en();
 
--- Refresh tokens con rotación. Se guarda el hash, nunca el token.
--- id_familia agrupa todos los tokens de una misma sesión: si se reutiliza uno
--- ya usado, se revoca la familia completa.
+CREATE TRIGGER tr_usuario_no_eliminar
+    BEFORE DELETE ON usuario
+    FOR EACH ROW EXECUTE FUNCTION tg_comun_no_eliminar();
+
 CREATE TABLE token_refresco (
     id_token_refresco  BIGINT GENERATED ALWAYS AS IDENTITY,
     id_usuario         BIGINT       NOT NULL,
@@ -66,3 +151,5 @@ CREATE TABLE token_refresco (
     CONSTRAINT fk_token_refresco_usuario FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario),
     CONSTRAINT ck_token_refresco_expira CHECK (expira_en > creado_en)
 );
+
+INSERT INTO version_esquema (script) VALUES ('002_seguridad.sql');

@@ -13,8 +13,6 @@ CREATE TABLE categoria_articulo (
     CONSTRAINT uq_categoria_articulo_nombre UNIQUE (nombre)
 );
 
--- clase 'insumo': se consume (jabón, papel, cloro, desinfectante).
--- clase 'blanco': se reutiliza y circula (toallas, sábanas, fundas).
 CREATE TABLE articulo (
     id_articulo            BIGINT GENERATED ALWAYS AS IDENTITY,
     id_hotel               BIGINT         NOT NULL,
@@ -40,9 +38,6 @@ CREATE TRIGGER tr_articulo_actualizado_en
     BEFORE UPDATE ON articulo
     FOR EACH ROW EXECUTE FUNCTION tg_comun_actualizado_en();
 
--- Cantidad actual por ubicación. Los insumos solo usan 'bodega'; los blancos
--- circulan entre bodega, habitaciones y lavandería. Solo cambia a través de
--- movimiento_inventario (lo hace el stored procedure en la misma transacción).
 CREATE TABLE existencia (
     id_articulo     BIGINT         NOT NULL,
     ubicacion       VARCHAR(15)    NOT NULL,
@@ -51,7 +46,6 @@ CREATE TABLE existencia (
     CONSTRAINT pk_existencia PRIMARY KEY (id_articulo, ubicacion),
     CONSTRAINT fk_existencia_articulo FOREIGN KEY (id_articulo) REFERENCES articulo (id_articulo),
     CONSTRAINT ck_existencia_ubicacion CHECK (ubicacion IN ('bodega', 'habitaciones', 'lavanderia')),
-    -- La existencia nunca queda negativa.
     CONSTRAINT ck_existencia_cantidad CHECK (cantidad >= 0)
 );
 
@@ -59,7 +53,6 @@ CREATE TRIGGER tr_existencia_actualizado_en
     BEFORE UPDATE ON existencia
     FOR EACH ROW EXECUTE FUNCTION tg_comun_actualizado_en();
 
--- Lote de blancos que lavandería recibe y luego devuelve.
 CREATE TABLE lote_lavanderia (
     id_lote_lavanderia  BIGINT GENERATED ALWAYS AS IDENTITY,
     id_hotel            BIGINT       NOT NULL,
@@ -85,8 +78,6 @@ CREATE TRIGGER tr_lote_lavanderia_actualizado_en
     BEFORE UPDATE ON lote_lavanderia
     FOR EACH ROW EXECUTE FUNCTION tg_comun_actualizado_en();
 
--- Faltante = cantidad_recibida - cantidad_devuelta. Al cerrar el lote, el
--- faltante genera un movimiento de baja con su responsable.
 CREATE TABLE lote_lavanderia_detalle (
     id_lote_lavanderia_detalle  BIGINT GENERATED ALWAYS AS IDENTITY,
     id_lote_lavanderia          BIGINT         NOT NULL,
@@ -98,7 +89,6 @@ CREATE TABLE lote_lavanderia_detalle (
     actualizado_en              TIMESTAMPTZ    NOT NULL DEFAULT now(),
     CONSTRAINT pk_lote_lavanderia_detalle PRIMARY KEY (id_lote_lavanderia_detalle),
     CONSTRAINT uq_lote_lavanderia_detalle UNIQUE (id_lote_lavanderia, id_articulo),
-    -- Llaves compuestas: el artículo debe ser del mismo hotel que el lote.
     CONSTRAINT fk_lote_lavanderia_detalle_lote FOREIGN KEY (id_lote_lavanderia, id_hotel)
         REFERENCES lote_lavanderia (id_lote_lavanderia, id_hotel),
     CONSTRAINT fk_lote_lavanderia_detalle_articulo FOREIGN KEY (id_articulo, id_hotel)
@@ -112,11 +102,6 @@ CREATE TRIGGER tr_lote_lavanderia_detalle_actualizado_en
     BEFORE UPDATE ON lote_lavanderia_detalle
     FOR EACH ROW EXECUTE FUNCTION tg_comun_actualizado_en();
 
--- Única vía para cambiar una existencia. Tabla de solo inserción: un error se
--- corrige con otro movimiento, nunca editando o borrando.
---   entrada / ajuste_positivo ........ solo destino
---   salida / ajuste_negativo / baja .. solo origen
---   traslado ......................... origen y destino distintos
 CREATE TABLE movimiento_inventario (
     id_movimiento_inventario     BIGINT GENERATED ALWAYS AS IDENTITY,
     id_articulo                  BIGINT         NOT NULL,
@@ -124,7 +109,6 @@ CREATE TABLE movimiento_inventario (
     ubicacion_origen             VARCHAR(15),
     ubicacion_destino            VARCHAR(15),
     cantidad                     DECIMAL(12,2)  NOT NULL,
-    -- Existencia que quedó en cada ubicación después del movimiento.
     existencia_resultante_origen   DECIMAL(12,2),
     existencia_resultante_destino  DECIMAL(12,2),
     motivo                       VARCHAR(300),
@@ -159,7 +143,6 @@ CREATE TABLE movimiento_inventario (
         AND (ubicacion_destino IS NULL) = (existencia_resultante_destino IS NULL)
         AND COALESCE(existencia_resultante_origen, 0) >= 0
         AND COALESCE(existencia_resultante_destino, 0) >= 0),
-    -- Ajustes y bajas exigen motivo escrito.
     CONSTRAINT ck_movimiento_inventario_motivo CHECK (
         tipo NOT IN ('ajuste_positivo', 'ajuste_negativo', 'baja')
         OR length(btrim(COALESCE(motivo, ''))) > 0)
@@ -172,3 +155,5 @@ CREATE TRIGGER tr_movimiento_inventario_inmutable
 CREATE TRIGGER tr_movimiento_inventario_sin_truncate
     BEFORE TRUNCATE ON movimiento_inventario
     FOR EACH STATEMENT EXECUTE FUNCTION tg_comun_bloquear_cambios();
+
+INSERT INTO version_esquema (script) VALUES ('008_inventario_lavanderia.sql');

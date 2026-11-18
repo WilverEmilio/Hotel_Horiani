@@ -3,8 +3,6 @@
 -- Tareas de limpieza, reportes de mantenimiento y bloqueos (RN-09).
 -- =============================================================================
 
--- Se crea una al hacer check-out. La habitación vuelve a 'disponible' solo
--- cuando la tarea se marca como completada.
 CREATE TABLE tarea_limpieza (
     id_tarea_limpieza     BIGINT GENERATED ALWAYS AS IDENTITY,
     id_habitacion         BIGINT       NOT NULL,
@@ -29,8 +27,6 @@ CREATE TABLE tarea_limpieza (
     CONSTRAINT ck_tarea_limpieza_completada CHECK (
         (estado = 'completada') = (completada_en IS NOT NULL AND completada_por IS NOT NULL))
 );
-
--- Una habitación solo puede tener una tarea de limpieza abierta a la vez.
 CREATE UNIQUE INDEX uq_tarea_limpieza_abierta
     ON tarea_limpieza (id_habitacion)
     WHERE estado <> 'completada';
@@ -39,7 +35,6 @@ CREATE TRIGGER tr_tarea_limpieza_actualizado_en
     BEFORE UPDATE ON tarea_limpieza
     FOR EACH ROW EXECUTE FUNCTION tg_comun_actualizado_en();
 
--- Daño o falla reportada por cualquier empleado. id_habitacion NULL = área común.
 CREATE TABLE reporte_mantenimiento (
     id_reporte_mantenimiento  BIGINT GENERATED ALWAYS AS IDENTITY,
     id_hotel                  BIGINT       NOT NULL,
@@ -67,10 +62,6 @@ CREATE TABLE reporte_mantenimiento (
 CREATE TRIGGER tr_reporte_mantenimiento_actualizado_en
     BEFORE UPDATE ON reporte_mantenimiento
     FOR EACH ROW EXECUTE FUNCTION tg_comun_actualizado_en();
-
--- Saca una habitación de la venta por un rango de fechas [desde, hasta).
--- El cruce contra reservaciones lo valida el stored procedure bloqueando la
--- fila de la habitación, porque una restricción EXCLUDE no abarca dos tablas.
 CREATE TABLE bloqueo_habitacion (
     id_bloqueo_habitacion     BIGINT GENERATED ALWAYS AS IDENTITY,
     id_habitacion             BIGINT       NOT NULL,
@@ -94,3 +85,5 @@ CREATE TABLE bloqueo_habitacion (
 CREATE TRIGGER tr_bloqueo_habitacion_actualizado_en
     BEFORE UPDATE ON bloqueo_habitacion
     FOR EACH ROW EXECUTE FUNCTION tg_comun_actualizado_en();
+
+INSERT INTO version_esquema (script) VALUES ('009_limpieza_mantenimiento.sql');

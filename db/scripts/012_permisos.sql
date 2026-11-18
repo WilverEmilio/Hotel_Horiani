@@ -16,7 +16,6 @@ BEGIN
 END;
 $$;
 
--- Nadie, salvo el dueño de los objetos, toca tablas ni secuencias directamente.
 REVOKE ALL ON ALL TABLES IN SCHEMA public FROM PUBLIC;
 REVOKE ALL ON ALL SEQUENCES IN SCHEMA public FROM PUBLIC;
 REVOKE CREATE ON SCHEMA public FROM PUBLIC;
@@ -25,9 +24,9 @@ REVOKE ALL ON ALL SEQUENCES IN SCHEMA public FROM horiani_api;
 
 GRANT USAGE ON SCHEMA public TO horiani_api;
 
--- Las rutinas que se creen a partir de aquí (scripts 020 en adelante) ya no
--- son ejecutables por cualquiera: cada script de stored procedures otorga
--- EXECUTE a horiani_api de forma explícita. Los stored procedures se crean
--- como SECURITY DEFINER para que operen sobre las tablas con los permisos del
--- dueño, sin dar acceso directo a la API.
+REVOKE ALL ON SCHEMA interno FROM PUBLIC;
+REVOKE ALL ON SCHEMA interno FROM horiani_api;
+
 ALTER DEFAULT PRIVILEGES REVOKE EXECUTE ON ROUTINES FROM PUBLIC;
+
+INSERT INTO version_esquema (script) VALUES ('012_permisos.sql');

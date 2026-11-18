@@ -24,9 +24,6 @@ CREATE TRIGGER tr_hotel_actualizado_en
     BEFORE UPDATE ON hotel
     FOR EACH ROW EXECUTE FUNCTION tg_comun_actualizado_en();
 
--- Una fila por hotel. Aquí viven los parámetros de negocio que pueden cambiar
--- sin tocar código, incluida la política de cancelación (pendiente del cliente:
--- NULL significa "sin política definida todavía").
 CREATE TABLE hotel_configuracion (
     id_hotel                         BIGINT        NOT NULL,
     hora_checkout                    TIME          NOT NULL DEFAULT '11:00',
@@ -56,8 +53,6 @@ CREATE TABLE tipo_habitacion (
     nombre              VARCHAR(80)    NOT NULL,
     descripcion         TEXT,
     capacidad_maxima    INTEGER        NOT NULL,
-    -- Precio fijo por noche, IVA incluido. Solo lo cambia el administrador y
-    -- cada cambio queda en bitácora con valor anterior y valor nuevo.
     precio_base         DECIMAL(10,2)  NOT NULL,
     activo              BOOLEAN        NOT NULL DEFAULT TRUE,
     creado_en           TIMESTAMPTZ    NOT NULL DEFAULT now(),
@@ -65,7 +60,6 @@ CREATE TABLE tipo_habitacion (
     CONSTRAINT pk_tipo_habitacion PRIMARY KEY (id_tipo_habitacion),
     CONSTRAINT fk_tipo_habitacion_hotel FOREIGN KEY (id_hotel) REFERENCES hotel (id_hotel),
     CONSTRAINT uq_tipo_habitacion_hotel_nombre UNIQUE (id_hotel, nombre),
-    -- Necesaria para la llave foránea compuesta de habitacion.
     CONSTRAINT uq_tipo_habitacion_id_hotel UNIQUE (id_tipo_habitacion, id_hotel),
     CONSTRAINT ck_tipo_habitacion_capacidad CHECK (capacidad_maxima > 0),
     CONSTRAINT ck_tipo_habitacion_precio CHECK (precio_base > 0)
@@ -75,8 +69,6 @@ CREATE TRIGGER tr_tipo_habitacion_actualizado_en
     BEFORE UPDATE ON tipo_habitacion
     FOR EACH ROW EXECUTE FUNCTION tg_comun_actualizado_en();
 
--- Precio distinto al base en fechas especiales (días festivos, temporada).
--- periodo es [desde, hasta): la fecha final no se incluye.
 CREATE TABLE tarifa_especial (
     id_tarifa_especial  BIGINT GENERATED ALWAYS AS IDENTITY,
     id_tipo_habitacion  BIGINT         NOT NULL,
@@ -94,8 +86,6 @@ CREATE TABLE tarifa_especial (
     CONSTRAINT ck_tarifa_especial_precio CHECK (precio_noche > 0),
     CONSTRAINT ck_tarifa_especial_periodo CHECK (
         NOT isempty(periodo) AND NOT lower_inf(periodo) AND NOT upper_inf(periodo)),
-    -- Un tipo de habitación no puede tener dos tarifas especiales activas
-    -- con fechas cruzadas: el precio de una noche nunca es ambiguo.
     CONSTRAINT ex_tarifa_especial_traslape EXCLUDE USING gist
         (id_tipo_habitacion WITH =, periodo WITH &&) WHERE (activo)
 );
@@ -150,11 +140,9 @@ CREATE TABLE habitacion (
     actualizado_en      TIMESTAMPTZ  NOT NULL DEFAULT now(),
     CONSTRAINT pk_habitacion PRIMARY KEY (id_habitacion),
     CONSTRAINT fk_habitacion_hotel FOREIGN KEY (id_hotel) REFERENCES hotel (id_hotel),
-    -- Llave compuesta: impide asignar a una habitación un tipo de otro hotel.
     CONSTRAINT fk_habitacion_tipo FOREIGN KEY (id_tipo_habitacion, id_hotel)
         REFERENCES tipo_habitacion (id_tipo_habitacion, id_hotel),
     CONSTRAINT uq_habitacion_hotel_numero UNIQUE (id_hotel, numero),
-    -- Necesaria para las llaves foráneas compuestas de reservaciones.
     CONSTRAINT uq_habitacion_id_hotel UNIQUE (id_habitacion, id_hotel),
     CONSTRAINT ck_habitacion_estado CHECK (estado IN
         ('disponible', 'ocupada', 'en_limpieza', 'en_mantenimiento', 'fuera_de_servicio'))
@@ -163,3 +151,5 @@ CREATE TABLE habitacion (
 CREATE TRIGGER tr_habitacion_actualizado_en
     BEFORE UPDATE ON habitacion
     FOR EACH ROW EXECUTE FUNCTION tg_comun_actualizado_en();
+
+INSERT INTO version_esquema (script) VALUES ('003_hoteles_habitaciones.sql');

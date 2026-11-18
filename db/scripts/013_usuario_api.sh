@@ -20,4 +20,6 @@ SELECT format('CREATE ROLE %I LOGIN PASSWORD %L IN ROLE horiani_api', :'usuario'
 WHERE NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = :'usuario') \gexec
 
 SELECT format('GRANT CONNECT ON DATABASE %I TO %I', current_database(), :'usuario') \gexec
+
+INSERT INTO version_esquema (script) VALUES ('013_usuario_api.sh') ON CONFLICT DO NOTHING;
 SQL

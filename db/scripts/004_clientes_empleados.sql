@@ -5,8 +5,6 @@
 
 CREATE TABLE cliente (
     id_cliente        BIGINT GENERATED ALWAYS AS IDENTITY,
-    -- NULL: cliente registrado en recepción solo con nombre, documento y
-    -- teléfono, sin cuenta. Si después crea su cuenta, se enlaza aquí.
     id_usuario        BIGINT,
     nombres           VARCHAR(100) NOT NULL,
     apellidos         VARCHAR(100) NOT NULL,
@@ -29,9 +27,12 @@ CREATE TRIGGER tr_cliente_actualizado_en
     BEFORE UPDATE ON cliente
     FOR EACH ROW EXECUTE FUNCTION tg_comun_actualizado_en();
 
+CREATE TRIGGER tr_cliente_no_eliminar
+    BEFORE DELETE ON cliente
+    FOR EACH ROW EXECUTE FUNCTION tg_comun_no_eliminar();
+
 CREATE TABLE empleado (
     id_empleado     BIGINT GENERATED ALWAYS AS IDENTITY,
-    -- NULL: empleado que no usa el sistema ni la aplicación.
     id_usuario      BIGINT,
     nombres         VARCHAR(100) NOT NULL,
     apellidos       VARCHAR(100) NOT NULL,
@@ -55,7 +56,10 @@ CREATE TRIGGER tr_empleado_actualizado_en
     BEFORE UPDATE ON empleado
     FOR EACH ROW EXECUTE FUNCTION tg_comun_actualizado_en();
 
--- Hoteles en los que trabaja cada empleado; limita qué datos puede ver.
+CREATE TRIGGER tr_empleado_no_eliminar
+    BEFORE DELETE ON empleado
+    FOR EACH ROW EXECUTE FUNCTION tg_comun_no_eliminar();
+
 CREATE TABLE empleado_hotel (
     id_empleado  BIGINT       NOT NULL,
     id_hotel     BIGINT       NOT NULL,
@@ -64,9 +68,6 @@ CREATE TABLE empleado_hotel (
     CONSTRAINT fk_empleado_hotel_empleado FOREIGN KEY (id_empleado) REFERENCES empleado (id_empleado),
     CONSTRAINT fk_empleado_hotel_hotel FOREIGN KEY (id_hotel) REFERENCES hotel (id_hotel)
 );
-
--- Turnos fijos de cada hotel. hora_fin puede ser menor que hora_inicio:
--- significa que el turno termina al día siguiente (ejemplo 18:00 a 08:00).
 CREATE TABLE turno (
     id_turno        BIGINT GENERATED ALWAYS AS IDENTITY,
     id_hotel        BIGINT       NOT NULL,
@@ -87,9 +88,6 @@ CREATE TRIGGER tr_turno_actualizado_en
     BEFORE UPDATE ON turno
     FOR EACH ROW EXECUTE FUNCTION tg_comun_actualizado_en();
 
--- Turno fijo asignado a un empleado. vigencia con fin abierto = sigue vigente.
--- Un empleado puede cubrir más de un turno, pero no el mismo turno dos veces
--- en fechas cruzadas.
 CREATE TABLE empleado_turno (
     id_empleado_turno  BIGINT GENERATED ALWAYS AS IDENTITY,
     id_empleado        BIGINT       NOT NULL,
@@ -114,8 +112,6 @@ CREATE TRIGGER tr_empleado_turno_actualizado_en
     BEFORE UPDATE ON empleado_turno
     FOR EACH ROW EXECUTE FUNCTION tg_comun_actualizado_en();
 
--- Control de asistencia. Lo registra el administrador o el oficinista.
--- id_turno es NULL en estados que cubren el día completo (vacaciones, descanso).
 CREATE TABLE asistencia (
     id_asistencia   BIGINT GENERATED ALWAYS AS IDENTITY,
     id_empleado     BIGINT       NOT NULL,
@@ -137,7 +133,6 @@ CREATE TABLE asistencia (
         (id_empleado, id_hotel, fecha, id_turno),
     CONSTRAINT ck_asistencia_estado CHECK (estado IN
         ('asistio', 'llegada_tarde', 'falto', 'permiso', 'descanso', 'vacaciones', 'suspension')),
-    -- Asistir, llegar tarde o faltar siempre se refiere a un turno concreto.
     CONSTRAINT ck_asistencia_turno CHECK (
         estado NOT IN ('asistio', 'llegada_tarde', 'falto') OR id_turno IS NOT NULL)
 );
@@ -145,3 +140,5 @@ CREATE TABLE asistencia (
 CREATE TRIGGER tr_asistencia_actualizado_en
     BEFORE UPDATE ON asistencia
     FOR EACH ROW EXECUTE FUNCTION tg_comun_actualizado_en();
+
+INSERT INTO version_esquema (script) VALUES ('004_clientes_empleados.sql');

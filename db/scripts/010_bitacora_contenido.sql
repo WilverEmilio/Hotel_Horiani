@@ -3,17 +3,14 @@
 -- Bitácora (RN-11) y contenido editable de la página web (RN-12).
 -- =============================================================================
 
--- Trazabilidad: quién cambió qué, cuándo, y los valores anterior y nuevo.
--- Tabla de solo inserción.
 CREATE TABLE bitacora (
     id_bitacora     BIGINT GENERATED ALWAYS AS IDENTITY,
-    -- NULL = acción del sistema (expiración automática, pasarela).
     id_usuario      BIGINT,
     id_hotel        BIGINT,
     modulo          VARCHAR(40)  NOT NULL,
     entidad         VARCHAR(60)  NOT NULL,
     id_registro     VARCHAR(60)  NOT NULL,
-    accion          VARCHAR(12)  NOT NULL,
+    accion          VARCHAR(15)  NOT NULL,
     valor_anterior  JSONB,
     valor_nuevo     JSONB,
     direccion_ip    INET,
@@ -21,10 +18,10 @@ CREATE TABLE bitacora (
     CONSTRAINT pk_bitacora PRIMARY KEY (id_bitacora),
     CONSTRAINT fk_bitacora_usuario FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario),
     CONSTRAINT fk_bitacora_hotel FOREIGN KEY (id_hotel) REFERENCES hotel (id_hotel),
-    CONSTRAINT ck_bitacora_accion CHECK (accion IN ('crear', 'modificar', 'desactivar')),
+    CONSTRAINT ck_bitacora_accion CHECK (accion IN ('crear', 'modificar', 'desactivar', 'cambio_estado')),
     CONSTRAINT ck_bitacora_valores CHECK (
         (accion = 'crear' AND valor_anterior IS NULL AND valor_nuevo IS NOT NULL)
-        OR (accion IN ('modificar', 'desactivar') AND valor_anterior IS NOT NULL))
+        OR (accion IN ('modificar', 'desactivar', 'cambio_estado') AND valor_anterior IS NOT NULL))
 );
 
 CREATE TRIGGER tr_bitacora_inmutable
@@ -35,8 +32,7 @@ CREATE TRIGGER tr_bitacora_sin_truncate
     BEFORE TRUNCATE ON bitacora
     FOR EACH STATEMENT EXECUTE FUNCTION tg_comun_bloquear_cambios();
 
--- Todo lo editable de la página web. id_hotel NULL = contenido de la cadena.
--- Ejemplo: pagina 'inicio', seccion 'hero', clave 'titulo'.
+
 CREATE TABLE contenido_web (
     id_contenido_web  BIGINT GENERATED ALWAYS AS IDENTITY,
     id_hotel          BIGINT,
@@ -62,7 +58,6 @@ CREATE TRIGGER tr_contenido_web_actualizado_en
     BEFORE UPDATE ON contenido_web
     FOR EACH ROW EXECUTE FUNCTION tg_comun_actualizado_en();
 
--- Fotos del hotel para carrusel y galería.
 CREATE TABLE hotel_imagen (
     id_hotel_imagen    BIGINT GENERATED ALWAYS AS IDENTITY,
     id_hotel           BIGINT        NOT NULL,
@@ -77,3 +72,5 @@ CREATE TABLE hotel_imagen (
     CONSTRAINT ck_hotel_imagen_seccion CHECK (seccion IN ('carrusel', 'galeria')),
     CONSTRAINT ck_hotel_imagen_orden CHECK (orden >= 0)
 );
+
+INSERT INTO version_esquema (script) VALUES ('010_bitacora_contenido.sql');

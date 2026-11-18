@@ -8,16 +8,12 @@ CREATE TABLE cupon (
     codigo               CITEXT         NOT NULL,
     descripcion          VARCHAR(200),
     tipo                 VARCHAR(15)    NOT NULL,
-    -- porcentaje: de 0.01 a 100. monto_fijo: quetzales.
     valor                DECIMAL(10,2)  NOT NULL,
-    -- [desde, hasta): la fecha final no se incluye.
     vigencia             DATERANGE      NOT NULL,
     monto_minimo         DECIMAL(10,2)  NOT NULL DEFAULT 0,
-    -- NULL = sin límite.
     limite_usos_total    INTEGER,
     limite_usos_cliente  INTEGER,
     usos_actuales        INTEGER        NOT NULL DEFAULT 0,
-    -- NULL = aplica a todos los hoteles / todos los tipos de habitación.
     id_hotel             BIGINT,
     id_tipo_habitacion   BIGINT,
     creado_por           BIGINT         NOT NULL,
@@ -39,8 +35,6 @@ CREATE TABLE cupon (
     CONSTRAINT ck_cupon_monto_minimo CHECK (monto_minimo >= 0),
     CONSTRAINT ck_cupon_limite_total CHECK (limite_usos_total IS NULL OR limite_usos_total > 0),
     CONSTRAINT ck_cupon_limite_cliente CHECK (limite_usos_cliente IS NULL OR limite_usos_cliente > 0),
-    -- Protege el límite total bajo concurrencia: aunque dos clientes usen el
-    -- cupón al mismo tiempo, la base de datos rechaza el uso que lo excede.
     CONSTRAINT ck_cupon_usos CHECK (
         usos_actuales >= 0 AND (limite_usos_total IS NULL OR usos_actuales <= limite_usos_total))
 );
@@ -48,3 +42,5 @@ CREATE TABLE cupon (
 CREATE TRIGGER tr_cupon_actualizado_en
     BEFORE UPDATE ON cupon
     FOR EACH ROW EXECUTE FUNCTION tg_comun_actualizado_en();
+
+INSERT INTO version_esquema (script) VALUES ('005_cupones.sql');
