@@ -1,16 +1,33 @@
+name: hotel-horiani
+
 services:
   postgres:
     image: postgres:16
     container_name: hotel_horiani_db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: horiani
-      POSTGRES_PASSWORD: horiani_dev_password
-      POSTGRES_DB: hotel_horiani
+      # Todo sale del archivo .env (copia .env.example). Sin credenciales en el repo.
+      POSTGRES_USER: ${POSTGRES_USER:?Falta POSTGRES_USER en .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Falta POSTGRES_PASSWORD en .env}
+      POSTGRES_DB: ${POSTGRES_DB:-hotel_horiani}
+      # Usuario con el que se conecta la API: solo puede ejecutar stored procedures.
+      API_DB_USER: ${API_DB_USER:?Falta API_DB_USER en .env}
+      API_DB_PASSWORD: ${API_DB_PASSWORD:?Falta API_DB_PASSWORD en .env}
+      TZ: America/Guatemala
+      PGTZ: America/Guatemala
     ports:
-      - "5432:5432"
+      # Solo accesible desde esta máquina, no desde la red.
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      # Se ejecutan en orden numérico, solo la primera vez (base de datos vacía).
+      - ./db/scripts:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 20s
 
 volumes:
   postgres_data:
