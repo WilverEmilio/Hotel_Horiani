@@ -16,7 +16,6 @@
 -- Dirección IP para la bitácora: la API puede ejecutar, dentro de la misma
 -- transacción,  SELECT set_config('horiani.ip', '<ip del cliente>', true);
 -- =============================================================================
-
 CREATE TYPE interno.tp_actor AS (
     id_usuario   BIGINT,
     rol          VARCHAR(30),
@@ -101,7 +100,6 @@ BEGIN
     END IF;
 END;
 $$;
-
 CREATE OR REPLACE FUNCTION interno.sp_comun_exigir_hotel(p_actor interno.tp_actor, p_id_hotel BIGINT)
 RETURNS void
 LANGUAGE plpgsql
@@ -114,7 +112,7 @@ BEGIN
     END IF;
     IF p_actor.id_empleado IS NULL OR NOT EXISTS (
         SELECT 1 FROM empleado_hotel eh
-         WHERE eh.id_empleado = p_actor.id_empleado AND eh.id_hotel = p_id_hotel) THEN
+         WHERE eh.id_empleado = p_actor.id_empleado AND eh.id_hotel = p_id_hotel AND eh.activo) THEN
         PERFORM interno.sp_comun_error('HH403', 'hotel_no_permitido', 'No tiene acceso a este hotel');
     END IF;
 END;

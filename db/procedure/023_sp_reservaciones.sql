@@ -115,6 +115,9 @@ BEGIN
         IF v_id_cupon IS NOT NULL THEN
             UPDATE cupon c SET usos_actuales = c.usos_actuales - 1 WHERE c.id_cupon = v_id_cupon;
         END IF;
+
+        UPDATE pago p SET estado = 'expirado'
+         WHERE p.id_reservacion = p_id_reservacion AND p.estado = 'pendiente';
     END IF;
 
     INSERT INTO reservacion_estado_historial (id_reservacion, estado_anterior, estado_nuevo, id_usuario, motivo)
@@ -180,7 +183,6 @@ BEGIN
     RETURN v_total;
 END;
 $$;
-
 CREATE OR REPLACE FUNCTION sp_reservaciones_consultar_disponibilidad(
     p_id_hotel       BIGINT,
     p_fecha_entrada  DATE,
@@ -378,7 +380,6 @@ BEGIN
        OR jsonb_array_length(p_habitaciones) = 0 THEN
         PERFORM interno.sp_comun_error('HH422', 'habitaciones_requeridas', 'Seleccione al menos una habitación');
     END IF;
-
     PERFORM sp_reservaciones_expirar_pendientes();
 
     FOR v_item IN SELECT x FROM jsonb_array_elements(p_habitaciones) AS t(x) LOOP
@@ -547,7 +548,6 @@ BEGIN
            v_total::numeric(10,2), v_base::numeric(10,2), v_iva::numeric(10,2), v_anticipo::numeric(10,2),
            v_expira, FALSE;
 EXCEPTION
-
     WHEN exclusion_violation THEN
         PERFORM interno.sp_comun_error('HH409', 'habitacion_no_disponible',
             'Otra persona acaba de reservar esa habitación. Intente de nuevo');
@@ -628,7 +628,6 @@ BEGIN
      WHERE r.id_reservacion = p_id_reservacion;
 END;
 $$;
-
 CREATE OR REPLACE FUNCTION sp_reservaciones_listar_mias(
     p_id_usuario_actor  BIGINT,
     p_pagina            INTEGER,
@@ -670,6 +669,7 @@ BEGIN
      LIMIT p_tamano OFFSET (p_pagina - 1) * p_tamano;
 END;
 $$;
+
 CREATE OR REPLACE FUNCTION sp_reservaciones_listar(
     p_id_usuario_actor  BIGINT,
     p_id_hotel          BIGINT,

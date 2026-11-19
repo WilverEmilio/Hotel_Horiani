@@ -3,16 +3,6 @@
 -- Pagos y notificaciones de la pasarela (RN-04).
 -- =============================================================================
 
--- Anticipo en línea, saldo en el hotel y reembolsos. Un pago no se corrige
--- editándolo: un reembolso es otra fila que apunta al pago original.
--- No se guarda ningún dato de tarjeta.
--- Estados:
---   pendiente  -> se inició el cobro y se espera la respuesta de la pasarela
---   aprobado   -> cobrado
---   rechazado  -> la pasarela lo rechazó
---   expirado   -> la reservación venció antes de que llegara la respuesta
---   anulado    -> se cobró, pero la reservación ya no se pudo confirmar
---                 (habitación tomada): queda pendiente de reembolso
 CREATE TABLE pago (
     id_pago              BIGINT GENERATED ALWAYS AS IDENTITY,
     id_reservacion       BIGINT         NOT NULL,
@@ -68,8 +58,11 @@ BEGIN
         RAISE EXCEPTION 'El monto y los datos de un pago no pueden modificarse'
             USING ERRCODE = 'restrict_violation';
     END IF;
-    IF OLD.estado <> 'pendiente' AND NEW.estado IS DISTINCT FROM OLD.estado
-       AND NOT (OLD.estado = 'aprobado' AND NEW.estado = 'anulado') THEN
+
+    IF NEW.estado IS DISTINCT FROM OLD.estado
+       AND NOT (OLD.estado = 'pendiente'
+                OR (OLD.estado = 'expirado' AND NEW.estado IN ('anulado', 'rechazado'))
+                OR (OLD.estado = 'aprobado' AND NEW.estado = 'anulado')) THEN
         RAISE EXCEPTION 'Un pago en estado % no puede pasar a %', OLD.estado, NEW.estado
             USING ERRCODE = 'restrict_violation';
     END IF;
@@ -95,4 +88,4 @@ CREATE TABLE evento_pasarela (
     CONSTRAINT fk_evento_pasarela_pago FOREIGN KEY (id_pago) REFERENCES pago (id_pago)
 );
 
-INSERT INTO version_esquema (script) VALUES ('007_pagos.sql');
+INSERT INTO version_esquema (script) VALUES ('007_pagos.sql'); 

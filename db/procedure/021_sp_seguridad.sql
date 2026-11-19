@@ -87,6 +87,7 @@ AS $$
       JOIN rol r ON r.id_rol = u.id_rol
      WHERE u.correo = btrim(p_correo)::citext;
 $$;
+
 CREATE OR REPLACE FUNCTION sp_seguridad_registrar_intento_login(p_id_usuario BIGINT, p_exitoso BOOLEAN)
 RETURNS TABLE (bloqueado_hasta TIMESTAMPTZ, intentos_restantes INTEGER)
 LANGUAGE plpgsql
@@ -263,7 +264,7 @@ BEGIN
                    (SELECT array_agg(h.id_hotel ORDER BY h.id_hotel) FROM hotel h WHERE h.activo)
                WHEN e.id_empleado IS NOT NULL THEN
                    (SELECT array_agg(eh.id_hotel ORDER BY eh.id_hotel)
-                      FROM empleado_hotel eh WHERE eh.id_empleado = e.id_empleado)
+                      FROM empleado_hotel eh WHERE eh.id_empleado = e.id_empleado AND eh.activo)
            END,
            v_actor.permisos
       FROM usuario u
@@ -289,6 +290,7 @@ BEGIN
         'modificar', '{"contrasena": "anterior"}'::jsonb, '{"contrasena": "cambiada"}'::jsonb);
 END;
 $$;
+
 CREATE OR REPLACE FUNCTION sp_seguridad_cambiar_estado_usuario(
     p_id_usuario_actor  BIGINT,
     p_id_usuario        BIGINT,

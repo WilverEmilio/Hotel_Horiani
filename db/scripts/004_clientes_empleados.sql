@@ -2,7 +2,6 @@
 -- 004_clientes_empleados.sql
 -- Clientes (RN-06), empleados, turnos y asistencia (RN-07).
 -- =============================================================================
-
 CREATE TABLE cliente (
     id_cliente        BIGINT GENERATED ALWAYS AS IDENTITY,
     id_usuario        BIGINT,
@@ -61,13 +60,20 @@ CREATE TRIGGER tr_empleado_no_eliminar
     FOR EACH ROW EXECUTE FUNCTION tg_comun_no_eliminar();
 
 CREATE TABLE empleado_hotel (
-    id_empleado  BIGINT       NOT NULL,
-    id_hotel     BIGINT       NOT NULL,
-    creado_en    TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    id_empleado     BIGINT       NOT NULL,
+    id_hotel        BIGINT       NOT NULL,
+    activo          BOOLEAN      NOT NULL DEFAULT TRUE,
+    creado_en       TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    actualizado_en  TIMESTAMPTZ  NOT NULL DEFAULT now(),
     CONSTRAINT pk_empleado_hotel PRIMARY KEY (id_empleado, id_hotel),
     CONSTRAINT fk_empleado_hotel_empleado FOREIGN KEY (id_empleado) REFERENCES empleado (id_empleado),
     CONSTRAINT fk_empleado_hotel_hotel FOREIGN KEY (id_hotel) REFERENCES hotel (id_hotel)
 );
+
+CREATE TRIGGER tr_empleado_hotel_actualizado_en
+    BEFORE UPDATE ON empleado_hotel
+    FOR EACH ROW EXECUTE FUNCTION tg_comun_actualizado_en();
+
 CREATE TABLE turno (
     id_turno        BIGINT GENERATED ALWAYS AS IDENTITY,
     id_hotel        BIGINT       NOT NULL,
