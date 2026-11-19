@@ -96,6 +96,7 @@ BEGIN
         PERFORM interno.sp_comun_error('HH404', 'reservacion_no_encontrada', 'Reservación no encontrada');
     END IF;
 
+
     UPDATE reservacion r
        SET estado             = p_estado_nuevo,
            cancelada_en       = CASE WHEN p_estado_nuevo = 'cancelada' THEN now() ELSE r.cancelada_en END,
@@ -159,6 +160,68 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION interno.sp_cupones_calcular_descuento(
+    p_cupon       cupon,
+    p_id_cliente  BIGINT,
+    p_id_hotel    BIGINT,
+    p_tipos       BIGINT[],
+    p_subtotales  NUMERIC[])
+RETURNS NUMERIC
+LANGUAGE plpgsql
+STABLE
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+    v_hoy           DATE := interno.sp_comun_hoy();
+    v_usos_cliente  INTEGER;
+    v_base          NUMERIC := 0;
+    i               INTEGER;
+BEGIN
+    IF p_cupon.id_cupon IS NULL OR NOT p_cupon.activo THEN
+        PERFORM interno.sp_comun_error('HH422', 'cupon_invalido', 'El cupón no existe');
+    END IF;
+    IF v_hoy < lower(p_cupon.vigencia) THEN
+        PERFORM interno.sp_comun_error('HH422', 'cupon_no_vigente',
+            format('El cupón se puede usar a partir del %s', to_char(lower(p_cupon.vigencia), 'DD/MM/YYYY')));
+    END IF;
+    IF NOT (p_cupon.vigencia @> v_hoy) THEN
+        PERFORM interno.sp_comun_error('HH422', 'cupon_vencido', 'El cupón está vencido');
+    END IF;
+    IF p_cupon.limite_usos_total IS NOT NULL AND p_cupon.usos_actuales >= p_cupon.limite_usos_total THEN
+        PERFORM interno.sp_comun_error('HH422', 'cupon_agotado', 'El cupón ya alcanzó su límite de usos');
+    END IF;
+    IF p_cupon.id_hotel IS NOT NULL AND p_cupon.id_hotel <> p_id_hotel THEN
+        PERFORM interno.sp_comun_error('HH422', 'cupon_no_aplica', 'El cupón no aplica para este hotel');
+    END IF;
+    IF p_cupon.limite_usos_cliente IS NOT NULL THEN
+        SELECT count(*) INTO v_usos_cliente
+          FROM cupon_uso cu
+         WHERE cu.id_cupon = p_cupon.id_cupon AND cu.id_cliente = p_id_cliente AND cu.estado = 'aplicado';
+        IF v_usos_cliente >= p_cupon.limite_usos_cliente THEN
+            PERFORM interno.sp_comun_error('HH422', 'cupon_limite_cliente', 'Ya usó este cupón el máximo de veces permitido');
+        END IF;
+    END IF;
+
+    FOR i IN 1 .. COALESCE(array_length(p_tipos, 1), 0) LOOP
+        IF p_cupon.id_tipo_habitacion IS NULL OR p_cupon.id_tipo_habitacion = p_tipos[i] THEN
+            v_base := v_base + p_subtotales[i];
+        END IF;
+    END LOOP;
+    IF v_base = 0 THEN
+        PERFORM interno.sp_comun_error('HH422', 'cupon_no_aplica', 'El cupón no aplica a las habitaciones seleccionadas');
+    END IF;
+    IF v_base < p_cupon.monto_minimo THEN
+        PERFORM interno.sp_comun_error('HH422', 'cupon_monto_minimo',
+            format('El cupón requiere un monto mínimo de Q%s', to_char(p_cupon.monto_minimo, 'FM999999990.00')));
+    END IF;
+
+    RETURN CASE p_cupon.tipo
+        WHEN 'porcentaje' THEN round(v_base * p_cupon.valor / 100, 2)
+        ELSE least(p_cupon.valor, v_base)
+    END;
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION sp_reservaciones_expirar_pendientes()
 RETURNS INTEGER
 LANGUAGE plpgsql
@@ -183,6 +246,7 @@ BEGIN
     RETURN v_total;
 END;
 $$;
+
 CREATE OR REPLACE FUNCTION sp_reservaciones_consultar_disponibilidad(
     p_id_hotel       BIGINT,
     p_fecha_entrada  DATE,
@@ -319,8 +383,6 @@ DECLARE
     v_estado       TEXT;
     v_expira       TIMESTAMPTZ;
     v_cupon        cupon%ROWTYPE;
-    v_base_cupon   NUMERIC   := 0;
-    v_usos_cliente INTEGER;
     v_hoy          DATE;
     v_id_res       BIGINT;
     v_codigo       TEXT;
@@ -380,6 +442,7 @@ BEGIN
        OR jsonb_array_length(p_habitaciones) = 0 THEN
         PERFORM interno.sp_comun_error('HH422', 'habitaciones_requeridas', 'Seleccione al menos una habitación');
     END IF;
+
     PERFORM sp_reservaciones_expirar_pendientes();
 
     FOR v_item IN SELECT x FROM jsonb_array_elements(p_habitaciones) AS t(x) LOOP
@@ -452,45 +515,7 @@ BEGIN
         IF NOT FOUND OR NOT v_cupon.activo THEN
             PERFORM interno.sp_comun_error('HH422', 'cupon_invalido', 'El cupón no existe');
         END IF;
-        IF v_hoy < lower(v_cupon.vigencia) THEN
-            PERFORM interno.sp_comun_error('HH422', 'cupon_no_vigente',
-                format('El cupón se puede usar a partir del %s', to_char(lower(v_cupon.vigencia), 'DD/MM/YYYY')));
-        END IF;
-        IF NOT (v_cupon.vigencia @> v_hoy) THEN
-            PERFORM interno.sp_comun_error('HH422', 'cupon_vencido', 'El cupón está vencido');
-        END IF;
-        IF v_cupon.limite_usos_total IS NOT NULL AND v_cupon.usos_actuales >= v_cupon.limite_usos_total THEN
-            PERFORM interno.sp_comun_error('HH422', 'cupon_agotado', 'El cupón ya alcanzó su límite de usos');
-        END IF;
-        IF v_cupon.id_hotel IS NOT NULL AND v_cupon.id_hotel <> p_id_hotel THEN
-            PERFORM interno.sp_comun_error('HH422', 'cupon_no_aplica', 'El cupón no aplica para este hotel');
-        END IF;
-        IF v_cupon.limite_usos_cliente IS NOT NULL THEN
-            SELECT count(*) INTO v_usos_cliente
-              FROM cupon_uso cu
-             WHERE cu.id_cupon = v_cupon.id_cupon AND cu.id_cliente = v_id_cliente AND cu.estado = 'aplicado';
-            IF v_usos_cliente >= v_cupon.limite_usos_cliente THEN
-                PERFORM interno.sp_comun_error('HH422', 'cupon_limite_cliente', 'Ya usó este cupón el máximo de veces permitido');
-            END IF;
-        END IF;
-
-        FOR i IN 1 .. array_length(v_tipos, 1) LOOP
-            IF v_cupon.id_tipo_habitacion IS NULL OR v_cupon.id_tipo_habitacion = v_tipos[i] THEN
-                v_base_cupon := v_base_cupon + v_subtotales[i];
-            END IF;
-        END LOOP;
-        IF v_base_cupon = 0 THEN
-            PERFORM interno.sp_comun_error('HH422', 'cupon_no_aplica', 'El cupón no aplica a las habitaciones seleccionadas');
-        END IF;
-        IF v_base_cupon < v_cupon.monto_minimo THEN
-            PERFORM interno.sp_comun_error('HH422', 'cupon_monto_minimo',
-                format('El cupón requiere un monto mínimo de Q%s', to_char(v_cupon.monto_minimo, 'FM999999990.00')));
-        END IF;
-
-        v_descuento := CASE v_cupon.tipo
-            WHEN 'porcentaje' THEN round(v_base_cupon * v_cupon.valor / 100, 2)
-            ELSE least(v_cupon.valor, v_base_cupon)
-        END;
+        v_descuento := interno.sp_cupones_calcular_descuento(v_cupon, v_id_cliente, p_id_hotel, v_tipos, v_subtotales);
 
         UPDATE cupon c SET usos_actuales = c.usos_actuales + 1 WHERE c.id_cupon = v_cupon.id_cupon;
     END IF;
@@ -555,7 +580,6 @@ EXCEPTION
         PERFORM interno.sp_comun_error('HH409', 'reintentar', 'Hubo mucha demanda en este momento. Intente de nuevo');
 END;
 $$;
-
 
 CREATE OR REPLACE FUNCTION sp_reservaciones_obtener(p_id_usuario_actor BIGINT, p_id_reservacion BIGINT)
 RETURNS TABLE (
@@ -628,6 +652,7 @@ BEGIN
      WHERE r.id_reservacion = p_id_reservacion;
 END;
 $$;
+
 CREATE OR REPLACE FUNCTION sp_reservaciones_listar_mias(
     p_id_usuario_actor  BIGINT,
     p_pagina            INTEGER,
