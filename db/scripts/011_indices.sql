@@ -29,6 +29,9 @@ CREATE INDEX ix_reservacion_cupon ON reservacion (id_cupon) WHERE id_cupon IS NO
 CREATE INDEX ix_reservacion_por_expirar ON reservacion (expira_en) WHERE estado = 'pendiente_pago';
 CREATE INDEX ix_reservacion_habitacion_habitacion ON reservacion_habitacion (id_habitacion);
 CREATE INDEX ix_reservacion_habitacion_tipo ON reservacion_habitacion (id_tipo_habitacion);
+CREATE INDEX ix_reservacion_noche_fecha ON reservacion_noche (fecha, id_reservacion_habitacion);
+CREATE INDEX ix_reservacion_hotel_creado ON reservacion (id_hotel, creado_en);
+CREATE INDEX ix_reservacion_cancelada ON reservacion (id_hotel, cancelada_en) WHERE cancelada_en IS NOT NULL;
 CREATE INDEX ix_reservacion_estado_historial_reservacion
     ON reservacion_estado_historial (id_reservacion, creado_en);
 
@@ -39,6 +42,7 @@ CREATE INDEX ix_pago_origen ON pago (id_pago_origen) WHERE id_pago_origen IS NOT
 CREATE INDEX ix_articulo_hotel_clase ON articulo (id_hotel, clase) WHERE activo;
 CREATE INDEX ix_articulo_categoria ON articulo (id_categoria_articulo);
 CREATE INDEX ix_movimiento_inventario_articulo ON movimiento_inventario (id_articulo, creado_en DESC);
+CREATE INDEX ix_movimiento_inventario_fecha ON movimiento_inventario (creado_en, id_articulo);
 CREATE INDEX ix_movimiento_inventario_lote ON movimiento_inventario (id_lote_lavanderia)
     WHERE id_lote_lavanderia IS NOT NULL;
 CREATE INDEX ix_lote_lavanderia_hotel_estado ON lote_lavanderia (id_hotel, estado);
@@ -51,6 +55,8 @@ CREATE INDEX ix_reporte_mantenimiento_habitacion ON reporte_mantenimiento (id_ha
 CREATE INDEX ix_bitacora_modulo ON bitacora (modulo, creado_en DESC);
 CREATE INDEX ix_bitacora_usuario ON bitacora (id_usuario, creado_en DESC);
 CREATE INDEX ix_bitacora_entidad ON bitacora (entidad, id_registro);
+CREATE INDEX ix_bitacora_fecha ON bitacora (creado_en DESC);
+CREATE INDEX ix_bitacora_hotel ON bitacora (id_hotel, creado_en DESC) WHERE id_hotel IS NOT NULL;
 CREATE INDEX ix_hotel_imagen_hotel ON hotel_imagen (id_hotel, seccion, orden) WHERE activo;
 
 INSERT INTO version_esquema (script) VALUES ('011_indices.sql');
