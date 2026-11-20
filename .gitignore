@@ -25,3 +25,5 @@ out/
 # Sistema
 .DS_Store
 *.log
+
+.venv/
