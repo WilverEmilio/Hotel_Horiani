@@ -1,0 +1,40 @@
+"""Arma la aplicación FastAPI: CORS, manejo de errores y rutas (como aplicacion.ts de shopcart)."""
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+
+from .config.base_de_datos import conexion_disponible
+from .config.entorno import obtener_configuracion
+from .shared.middleware.manejo_errores import registrar_manejo_errores
+
+
+def crear_aplicacion(ciclo_de_vida=None) -> FastAPI:
+    conf = obtener_configuracion()
+    app = FastAPI(
+        title="Hotel Horiani API",
+        version="1.0.0",
+        description="API del sistema Hotel Horiani. Todo el acceso a datos es por stored procedures.",
+        lifespan=ciclo_de_vida,
+        docs_url="/docs" if conf.es_desarrollo else None,  
+        redoc_url=None,
+        openapi_url="/openapi.json" if conf.es_desarrollo else None,
+    )
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=conf.lista_origenes,
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
+        allow_headers=["Authorization", "Content-Type", "Idempotency-Key", "X-Cliente"],
+    )
+
+    registrar_manejo_errores(app)
+
+    @app.get("/health", tags=["Sistema"], summary="Estado de la API y de la conexión a la base")
+    async def health():
+        if await conexion_disponible(): 
+            return {"mensaje": "API funcionando correctamente", "datos": {"baseDeDatos": "ok"}}
+        return JSONResponse(status_code=503, content={
+            "codigo": "sin_base_de_datos", "mensaje": "La API no tiene conexión a la base de datos"})
+
+    return app

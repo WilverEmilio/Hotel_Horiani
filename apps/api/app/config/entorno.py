@@ -25,6 +25,8 @@ class Configuracion(BaseSettings):
     db_pool_min: int = 2
     db_pool_max: int = 10
     
+    origenes_cors: str = "http://localhost:4321,http://localhost:5173"
+    
     @property
     def dsn(self) -> str: 
         return make_conninfo(
@@ -35,6 +37,14 @@ class Configuracion(BaseSettings):
             password = self.api_db_password.get_secret_value(),
             application_name = 'horiani_api',
         )
+        
+    @property
+    def lista_origenes(self) -> list[str]:
+        return [o.strip().rstrip("/") for o in self.origenes_cors.split(",") if o.strip()]
+
+    @property
+    def es_desarrollo(self) -> bool:
+        return self.entorno in ("desarrollo", "pruebas")
         
 @lru_cache
 def obtener_configuracion() -> Configuracion:
