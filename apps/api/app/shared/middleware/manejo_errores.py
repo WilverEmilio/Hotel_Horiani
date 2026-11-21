@@ -6,11 +6,14 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+import psycopg
+from ..errores.catalogo_errores import traducir_error_bd, MENSAJE_INTERNO
+
 from ..errores.error_aplicacion import ErrorAplicacion
 
 log = logging.getLogger("horiani.errores")
 
-MENSAJE_INTERNO = "Ocurrió un error interno en el servidor"
+
 
 MENSAJES_VALIDACION = {
     "missing": "Campo obligatorio",
@@ -60,6 +63,11 @@ def registrar_manejo_errores(app: FastAPI) -> None:
         mensaje = MENSAJE_INTERNO if e.estado_http >= 500 else e.mensaje
         return JSONResponse(status_code=e.estado_http, content=_cuerpo(e.codigo, mensaje, e.detalles),
                             headers=e.encabezados)
+    
+    @app.exception_handler(psycopg.Error)
+    async def _error_bd(_: Request, e: psycopg.Error):
+        err = traducir_error_bd(e)
+        return JSONResponse(status_code=err.estado_http, content=_cuerpo(err.codigo, err.mensaje))
 
     @app.exception_handler(RequestValidationError)
     async def _validacion(_: Request, e: RequestValidationError):
