@@ -1,5 +1,5 @@
 class ErrorAplicacion(Exception):
-    def __ini__(self, 
+    def __init__(self, 
                 mensaje: str, 
                 codigo: str, 
                 estado_http: int,

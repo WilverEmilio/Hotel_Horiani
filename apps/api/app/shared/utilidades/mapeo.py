@@ -1,5 +1,7 @@
 from typing import Any
+
 from pydantic.alias_generators import to_camel, to_snake
+
 
 def a_camel(valor: Any,
             conservar: frozenset[str] = frozenset()) -> Any:

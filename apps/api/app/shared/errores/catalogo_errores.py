@@ -1,5 +1,7 @@
 import logging
+
 import psycopg
+
 from .error_aplicacion import ErrorAplicacion
 
 log = logging.getLogger('horiani.errores')
@@ -26,7 +28,7 @@ SQLSTATE_HTTP: dict[str, tuple[int, str, str]] = {
 def traducir_error_bd(e: psycopg.Error) -> ErrorAplicacion:
     estado_sql = e.sqlstate or ""
     diag = e.diag
-    mensaje = diag.message_primaty or MENSAJE_INTERNO
+    mensaje = diag.message_primary or MENSAJE_INTERNO
 
     if estado_sql.startswith("HH4") and estado_sql[2:].isdigit():
         return ErrorAplicacion(mensaje, diag.message_detail or 'error_negocio', int(estado_sql[2:]))

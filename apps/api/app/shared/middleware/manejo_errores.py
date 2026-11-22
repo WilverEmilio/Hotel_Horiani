@@ -1,14 +1,13 @@
 """Manejo de errores: todas las respuestas de error son {"codigo", "mensaje", "detalles"?}."""
 import logging
 
+import psycopg
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-import psycopg
-from ..errores.catalogo_errores import traducir_error_bd, MENSAJE_INTERNO
-
+from ..errores.catalogo_errores import MENSAJE_INTERNO, traducir_error_bd
 from ..errores.error_aplicacion import ErrorAplicacion
 
 log = logging.getLogger("horiani.errores")

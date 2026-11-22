@@ -1,5 +1,5 @@
+import contextvars
 import asyncio
-import _contextvars
 import logging
 import re
 from typing import Any
@@ -13,7 +13,7 @@ from ..errores.catalogo_errores import traducir_error_bd
 
 log = logging.getLogger('horiani.bd')
 
-ip_actual: _contextvars.ContextVar[str | None] = _contextvars.ContextVar('ip_actual', default=None)
+ip_actual: contextvars.ContextVar[str | None] = contextvars.ContextVar('ip_actual', default=None)
 
 _NOMBRE_SP = re.compile(r"^sp_[a-z0-9_]+$")
 _REINTENTABLES = (psycopg.errors.DeadlockDetected, psycopg.errors.SerializationFailure)
@@ -24,7 +24,6 @@ def json(valor: Any) -> Jsonb:
 
 
 def _consulta(nombre_sp: str, cantidad_args: int) -> sql.Composed:
-    """Arma: SELECT * FROM "sp_nombre"(%s, %s, ...) — sin concatenar valores."""
     if not _NOMBRE_SP.match(nombre_sp):
         raise ValueError(f"Nombre de stored procedure inválido: {nombre_sp}")
     marcadores = sql.SQL(", ").join(sql.Placeholder() * cantidad_args)
@@ -35,13 +34,12 @@ async def _llamar(nombre_sp: str, args: tuple) -> list[dict]:
     consulta = _consulta(nombre_sp, len(args))
     for intento in (1, 2):
         try:
-            async with obtener_pool().connection() as conn:
-                async with conn.transaction():
-                    ip = ip_actual.get()
-                    if ip: 
-                        await conn.execute("SELECT set_config('horiani.ip', %s, true)", (ip,))
-                    cur = await conn.execute(consulta, args)
-                    return await cur.fetchall() if cur.description else []
+            async with obtener_pool().connection() as conn, conn.transaction():
+                ip = ip_actual.get()
+                if ip: 
+                    await conn.execute("SELECT set_config('horiani.ip', %s, true)", (ip,))
+                cur = await conn.execute(consulta, args)
+                return await cur.fetchall() if cur.description else []
         except _REINTENTABLES as e:
             if intento == 1:
                 log.warning("Reintentando %s por %s", nombre_sp, type(e).__name__)

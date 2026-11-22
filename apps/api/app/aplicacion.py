@@ -1,11 +1,16 @@
-"""Arma la aplicación FastAPI: CORS, manejo de errores y rutas (como aplicacion.ts de shopcart)."""
-from fastapi import FastAPI
+from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from .config.base_de_datos import conexion_disponible
 from .config.entorno import obtener_configuracion
+from .modulos.hoteles.rutas.hoteles_rutas import rutas_hoteles_publico
+from .shared.middleware.contexto import contexto_peticion
 from .shared.middleware.manejo_errores import registrar_manejo_errores
+
+RUTAS = [
+    rutas_hoteles_publico
+]
 
 
 def crear_aplicacion(ciclo_de_vida=None) -> FastAPI:
@@ -29,6 +34,13 @@ def crear_aplicacion(ciclo_de_vida=None) -> FastAPI:
     )
 
     registrar_manejo_errores(app)
+    
+    app.middleware('http')(contexto_peticion)
+    
+    v1 = APIRouter(prefix = '/api/v1')
+    for rutas in RUTAS:
+        v1.include_router(rutas)
+    app.include_router(v1)
 
     @app.get("/health", tags=["Sistema"], summary="Estado de la API y de la conexión a la base")
     async def health():

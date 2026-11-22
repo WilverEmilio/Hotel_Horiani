@@ -40,5 +40,5 @@ async def conexion_disponible() -> bool:
         async with _pool.connection(timeout=3) as conn:
             await conn.execute('SELECT 1')
         return True
-    except Exception: 
+    except psycopg.Error: 
         return False
