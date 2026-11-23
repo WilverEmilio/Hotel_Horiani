@@ -1,7 +1,9 @@
 from decimal import Decimal
 from typing import Annotated, Literal
+
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 from pydantic.alias_generators import to_camel
+
 
 class EsquemaBase(BaseModel):
     model_config = ConfigDict(

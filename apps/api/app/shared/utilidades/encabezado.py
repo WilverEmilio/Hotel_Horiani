@@ -1,7 +1,8 @@
 from typing import Annotated, Literal
+
 from fastapi import Depends, Header
 
-TipoCliente = Literal['web', 'mobil']
+TipoCliente = Literal['web', 'movil']
 
 async def tipo_cliente(
     x_cliente: Annotated[

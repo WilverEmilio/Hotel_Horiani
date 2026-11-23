@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Annotated
+
 from fastapi import Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 

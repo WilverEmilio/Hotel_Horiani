@@ -1,6 +1,7 @@
 import asyncio
+
 from argon2 import PasswordHasher
-from argon2.exeptions import InvalidHashError, VerificataionError, VerifyMismatchError
+from argon2.exceptions import InvalidHashError, VerificationError, VerifyMismatchError
 
 _hasher = PasswordHasher()
 _HASH_FICTICIO = _hasher.hash('contrasena-ficticia-para-igualar-tiempos')
@@ -8,7 +9,7 @@ _HASH_FICTICIO = _hasher.hash('contrasena-ficticia-para-igualar-tiempos')
 def _verificar(hash_guardado: str | None, contrasena: str) -> bool:
     try: 
         return _hasher.verify(hash_guardado or _HASH_FICTICIO, contrasena) and hash_guardado is not None
-    except (VerifyMismatchError, VerificataionError, InvalidHashError):
+    except (VerifyMismatchError, VerificationError, InvalidHashError):
         return False
     
 

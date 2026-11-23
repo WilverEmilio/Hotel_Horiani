@@ -1,7 +1,9 @@
 import hashlib
 import secrets
 from datetime import UTC, datetime, timedelta
+
 import jwt
+
 from ...config.entorno import obtener_configuracion
 
 _ALGORITMO = 'HS256'
@@ -15,7 +17,7 @@ def crear_token_acceso(id_usuario: int, rol: str) -> tuple[str, int]:
         'sub': str(id_usuario),
         'rol': rol,
         'iss': _EMISOR,
-        'ait': ahora,
+        'iat': ahora,
         'exp': ahora + timedelta(seconds=segundos),
         'typ': 'acceso'
     }

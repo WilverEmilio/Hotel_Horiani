@@ -47,8 +47,8 @@ class Configuracion(BaseSettings):
             raise ValueError("En producción COOKIE_SEGURA debe ser true")
         if self.cookie_samesite == "none" and not self.cookie_segura:
             raise ValueError("COOKIE_SAMESITE=none requiere COOKIE_SEGURA=true")
-        if self.cookie_dominio == "":
-            self.cookie_dominio = None
+        if self.cooki_dominio:
+            self.cooki_dominio = None
         return self
     
     @property

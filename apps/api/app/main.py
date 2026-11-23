@@ -7,6 +7,7 @@ from fastapi import FastAPI
 from .aplicacion import crear_aplicacion
 from .config.base_de_datos import abrir_conexion, cerrar_conexion
 from .config.entorno import obtener_configuracion
+from .semillas.usuarios_prueba import contrasenas_de_prueba
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
@@ -15,6 +16,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name
 async def ciclo_de_vida(_: FastAPI):
     conf = obtener_configuracion()
     await abrir_conexion(conf.dsn, conf.db_pool_min, conf.db_pool_max)
+    await contrasenas_de_prueba(conf)
     try:
         yield
     finally:
