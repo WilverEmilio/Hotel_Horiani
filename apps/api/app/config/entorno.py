@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Literal
 
 from psycopg.conninfo import make_conninfo
-from pydantic import SecretStr
+from pydantic import SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 RAIZ_REPO = Path(__file__).resolve().parents[4]
@@ -26,6 +26,30 @@ class Configuracion(BaseSettings):
     db_pool_max: int = 10
     
     origenes_cors: str = "http://localhost:4321,http://localhost:5173"
+    
+    jwt_secreto: SecretStr
+    jsw_minutos_acceso: int = 15
+    refresh_dias: int = 7
+    
+    cookie_nombre: str = 'hotel_refresh'
+    cooki_dominio: str | None = None
+    cookie_segura: bool = False
+    cookie_samesite: Literal['lax', 'strict', 'none'] = 'lax'
+    
+    cargar_datos_prueba: bool = False
+    contrasena_datos_prueba: SecretStr = SecretStr('')
+    
+    @model_validator(mode="after")
+    def _validar(self):
+        if len(self.jwt_secreto.get_secret_value()) < 32:
+            raise ValueError("JWT_SECRETO debe tener al menos 32 caracteres")
+        if self.entorno == "produccion" and not self.cookie_segura:
+            raise ValueError("En producción COOKIE_SEGURA debe ser true")
+        if self.cookie_samesite == "none" and not self.cookie_segura:
+            raise ValueError("COOKIE_SAMESITE=none requiere COOKIE_SEGURA=true")
+        if self.cookie_dominio == "":
+            self.cookie_dominio = None
+        return self
     
     @property
     def dsn(self) -> str: 
