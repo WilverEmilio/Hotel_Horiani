@@ -46,4 +46,4 @@ def traducir_error_bd(e: psycopg.Error) -> ErrorAplicacion:
         return ErrorAplicacion(texto, codigo, estado)
 
     log.error('Error de base de datos no controlado [%s]: %s | %s', estado_sql, mensaje, diag.message_detail)
-    return ErrorAplicacion(MENSAJE_INTERNO, 'Error_interno', 500)
+    return ErrorAplicacion(MENSAJE_INTERNO, 'error_interno', 500)

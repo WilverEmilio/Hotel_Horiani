@@ -12,7 +12,7 @@ _EMISOR = 'horiani-api'
 def crear_token_acceso(id_usuario: int, rol: str) -> tuple[str, int]:
     conf = obtener_configuracion()
     ahora = datetime.now(UTC)
-    segundos = conf.jsw_minutos_acceso * 60
+    segundos = conf.jwt_minutos_acceso * 60
     carga = {
         'sub': str(id_usuario),
         'rol': rol,

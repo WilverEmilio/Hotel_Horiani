@@ -28,11 +28,11 @@ class Configuracion(BaseSettings):
     origenes_cors: str = "http://localhost:4321,http://localhost:5173"
     
     jwt_secreto: SecretStr
-    jsw_minutos_acceso: int = 15
+    jwt_minutos_acceso: int = 15
     refresh_dias: int = 7
     
-    cookie_nombre: str = 'hotel_refresh'
-    cooki_dominio: str | None = None
+    cookie_nombre: str = 'horiani_refresh'
+    cookie_dominio: str | None = None
     cookie_segura: bool = False
     cookie_samesite: Literal['lax', 'strict', 'none'] = 'lax'
     
@@ -47,8 +47,8 @@ class Configuracion(BaseSettings):
             raise ValueError("En producción COOKIE_SEGURA debe ser true")
         if self.cookie_samesite == "none" and not self.cookie_segura:
             raise ValueError("COOKIE_SAMESITE=none requiere COOKIE_SEGURA=true")
-        if self.cooki_dominio:
-            self.cooki_dominio = None
+        if self.cookie_dominio == '':
+            self.cookie_dominio = None
         return self
     
     @property

@@ -7,8 +7,8 @@ def respuesta(mensaje: str,
               datos: Any = None,
               conservar: frozenset[str] = frozenset()) ->  dict:
     return {
-        'Mensaje': mensaje,
-        'Datos': a_camel(datos, conservar)
+        'mensaje': mensaje,
+        'datos': a_camel(datos, conservar)
     }
     
 def paginar(filas: list[dict],

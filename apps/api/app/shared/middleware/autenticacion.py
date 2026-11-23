@@ -20,7 +20,7 @@ class Actor:
 def _no_autenticado(mensaje: str) -> ErrorAplicacion:
     return ErrorAplicacion(
         mensaje,
-        'No_Autenticado',
+        'no_autenticado',
         401,
         encabezados={"WWW-Authenticate": "Bearer"}
     )
@@ -35,7 +35,7 @@ async def autenticar(
         raise _no_autenticado("Debes iniciar sesión para acceder a este recurso")
     carga = leer_token_acceso(credenciales.credentials)
     if carga is None: 
-        raise _no_autenticado('La sesión no es válida o expiro')
+        raise _no_autenticado('La sesión no es válida o expiró')
     return Actor(
         id_usuario = int (
             carga[
