@@ -30,3 +30,28 @@ async def obtener_perfil(id_usuario: int) -> dict | None:
 
 async def establecer_contrasena_inicial(correo: str, contrasena_hash: str) -> bool:
     return bool(await ejecutar.valor("sp_seguridad_establecer_contrasena_inicial", correo, contrasena_hash))
+
+async def rotar_token_refresco(hash_actual: str, hash_nuevo: str, expira_en: datetime,
+                               direccion_ip: str | None, agente_usuario: str | None) -> dict | None:
+    return await ejecutar.fila("sp_seguridad_rotar_token_refresco", hash_actual, hash_nuevo, expira_en,
+                               direccion_ip, agente_usuario)
+
+
+async def cerrar_sesion(token_hash: str) -> None:
+    await ejecutar.procedimiento("sp_seguridad_cerrar_sesion", token_hash)
+
+
+async def cerrar_todas_sesiones(id_usuario: int) -> None:
+    await ejecutar.procedimiento("sp_seguridad_cerrar_todas_sesiones", id_usuario)
+
+
+async def cambiar_contrasena(id_usuario: int, contrasena_hash: str) -> None:
+    await ejecutar.procedimiento("sp_seguridad_cambiar_contrasena", id_usuario, contrasena_hash)
+
+
+async def validar_enlace_contrasena(token_hash: str) -> dict | None:
+    return await ejecutar.fila("sp_seguridad_validar_enlace_contrasena", token_hash)
+
+
+async def usar_enlace_contrasena(token_hash: str, contrasena_hash: str) -> int:
+    return await ejecutar.valor("sp_seguridad_usar_enlace_contrasena", token_hash, contrasena_hash)

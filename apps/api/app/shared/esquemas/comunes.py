@@ -25,6 +25,9 @@ class EsquemaConsulta(BaseModel):
 class ConsultaPaginada(EsquemaConsulta):
     pagina: int = Field(1, ge=1, description="Página, desde 1")
     registros_por_pagina: int = Field(20, ge=1, le=100, description="Registros por página (máximo 100)")
+    
+class CambiarEstadoEsquema(EsquemaBase):
+    activo: bool
 
 
 Direccion = Literal["asc", "desc"]

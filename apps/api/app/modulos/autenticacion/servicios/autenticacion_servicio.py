@@ -9,11 +9,14 @@ from ....shared.utilidades.tokens import (
     hash_token,
     nuevo_token_opaco,
 )
-from ..esquemas.autenticacion_esquema import InicioSesionEsquema, RegistroClienteEsquema
+from ..esquemas.autenticacion_esquema import InicioSesionEsquema, RegistroClienteEsquema, CambioContrasenaEsquema, DefinirContrasenaEsquema
 from ..repositorios import autenticacion_repositorio as repositorio
 from ..tipos.autenticacion_tipo import SesionEmitida
 
 _CREDENCIALES_INVALIDAS = ("Correo o contraseña incorrectos", "credenciales_invalidas", 401)
+_ENLACE_INVALIDO = ('El enlace no es válido o ya venció. Solicite uno nuevo',
+                    'enlace_invalido',
+                    422)
 
 
 def _vence_refresh() -> datetime:
@@ -50,7 +53,7 @@ async def iniciar_sesion(datos: InicioSesionEsquema, ip: str | None, agente: str
         raise ErrorAplicacion(*_CREDENCIALES_INVALIDAS)
     if not valida:
         intento = await repositorio.registrar_intento_login(cred["id_usuario"], False)
-        if intento and intento["bloqueado_hasta"]:   # este fue el 5.º intento fallido
+        if intento and intento["bloqueado_hasta"]:  
             raise _error_bloqueo(intento["bloqueado_hasta"])
         raise ErrorAplicacion(*_CREDENCIALES_INVALIDAS)
 
@@ -66,3 +69,45 @@ async def obtener_perfil(id_usuario: int) -> dict:
     if not perfil:
         raise ErrorAplicacion("El usuario no existe", "usuario_no_encontrado", 404)
     return perfil
+
+async def renovar(refresh_actual: str | None, ip: str | None, agente: str | None) -> SesionEmitida | str:
+    """Devuelve la sesión nueva, o el código de error ('sesion_invalida' / 'sesion_reutilizada')."""
+    if not refresh_actual:
+        return "sesion_invalida"
+    nuevo = nuevo_token_opaco()
+    fila = await repositorio.rotar_token_refresco(hash_token(refresh_actual), hash_token(nuevo),
+                                                  _vence_refresh(), ip, agente)
+    if not fila or fila["resultado"] != "valido":
+        return "sesion_reutilizada" if fila and fila["resultado"] == "reutilizado" else "sesion_invalida"
+    acceso, segundos = crear_token_acceso(fila["id_usuario"], fila["rol"])
+    return SesionEmitida(acceso, segundos, nuevo)
+
+
+async def cerrar_sesion(refresh_actual: str | None) -> None:
+    if refresh_actual:
+        await repositorio.cerrar_sesion(hash_token(refresh_actual))
+
+
+async def cerrar_todas_sesiones(id_usuario: int) -> None:
+    await repositorio.cerrar_todas_sesiones(id_usuario)
+
+
+async def cambiar_contrasena(id_usuario: int, datos: CambioContrasenaEsquema) -> None:
+    perfil = await obtener_perfil(id_usuario)
+    cred = await repositorio.obtener_credenciales(perfil["correo"])
+    if not await verificar_contrasena(cred["contrasena_hash"] if cred else None, datos.contrasena_actual):
+        raise ErrorAplicacion("La contraseña actual no es correcta", "contrasena_actual_incorrecta", 422)
+    if datos.contrasena_actual == datos.contrasena_nueva:
+        raise ErrorAplicacion("La nueva contraseña debe ser distinta de la actual", "contrasena_igual", 422)
+    await repositorio.cambiar_contrasena(id_usuario, await hashear_contrasena(datos.contrasena_nueva))
+
+
+async def validar_enlace(token: str) -> dict:
+    fila = await repositorio.validar_enlace_contrasena(hash_token(token))
+    if not fila:
+        raise ErrorAplicacion(*_ENLACE_INVALIDO)
+    return fila
+
+
+async def usar_enlace(datos: DefinirContrasenaEsquema) -> None:
+    await repositorio.usar_enlace_contrasena(hash_token(datos.token), await hashear_contrasena(datos.contrasena))

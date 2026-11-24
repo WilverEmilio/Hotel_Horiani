@@ -36,6 +36,9 @@ class Configuracion(BaseSettings):
     cookie_segura: bool = False
     cookie_samesite: Literal['lax', 'strict', 'none'] = 'lax'
     
+    url_web: str = 'http://localhost:4321'
+    enlace_contrasena_horas: int = 24
+    
     cargar_datos_prueba: bool = False
     contrasena_datos_prueba: SecretStr = SecretStr('')
     

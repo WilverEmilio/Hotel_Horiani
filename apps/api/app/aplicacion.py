@@ -8,10 +8,12 @@ from .modulos.autenticacion.rutas.autenticacion_rutas import rutas_autenticacion
 from .modulos.hoteles.rutas.hoteles_rutas import rutas_hoteles_publico
 from .shared.middleware.contexto import contexto_peticion
 from .shared.middleware.manejo_errores import registrar_manejo_errores
+from .modulos.usuarios.rutas.usuarios_rutas import rutas_usuarios
 
 RUTAS = [
     rutas_hoteles_publico,
     rutas_autenticacion,
+    rutas_usuarios,
 ]
 
 
