@@ -46,3 +46,9 @@ MontoCero = Annotated[Decimal, Field(ge=0, max_digits=10, decimal_places=2)]
 Cantidad = Annotated[Decimal, Field(gt=0, max_digits=12, decimal_places=2)]
 CantidadCero = Annotated[Decimal, Field(ge=0, max_digits=12, decimal_places=2)]
 Porcentaje = Annotated[Decimal, Field(ge=0, le=100, max_digits=5, decimal_places=2)]
+
+class MotivoEsquema(EsquemaBase):
+    motivo: TextoCorto
+    
+class ObservacionEsquema(EsquemaBase):
+    observacion: TextoOpcional = None

@@ -11,6 +11,10 @@ from .modulos.habitaciones.rutas.tipos_habitacion_rutas import (
     rutas_tipos_habitacion_publico,
 )
 from .modulos.hoteles.rutas.hoteles_rutas import rutas_hoteles, rutas_hoteles_publico
+from .modulos.reservaciones.rutas.reservaciones_rutas import (
+    rutas_disponibilidad_publico,
+    rutas_reservaciones,
+)
 from .modulos.usuarios.rutas.usuarios_rutas import rutas_usuarios
 from .shared.middleware.contexto import contexto_peticion
 from .shared.middleware.manejo_errores import registrar_manejo_errores
@@ -22,7 +26,9 @@ RUTAS = [
     rutas_hoteles,
     rutas_habitaciones,
     rutas_tipos_habitacion,
-    rutas_tipos_habitacion_publico
+    rutas_tipos_habitacion_publico,
+    rutas_disponibilidad_publico,
+    rutas_reservaciones,
 ]
 
 
