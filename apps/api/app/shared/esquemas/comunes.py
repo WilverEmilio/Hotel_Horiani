@@ -29,6 +29,9 @@ class ConsultaPaginada(EsquemaConsulta):
 class CambiarEstadoEsquema(EsquemaBase):
     activo: bool
 
+class OrdenIdsEsquema(EsquemaBase):
+    ids: list[int] = Field(min_length=1, description="Ids en el orden deseado")
+
 
 Direccion = Literal["asc", "desc"]
 
