@@ -9,7 +9,12 @@ from ....shared.utilidades.tokens import (
     hash_token,
     nuevo_token_opaco,
 )
-from ..esquemas.autenticacion_esquema import InicioSesionEsquema, RegistroClienteEsquema, CambioContrasenaEsquema, DefinirContrasenaEsquema
+from ..esquemas.autenticacion_esquema import (
+    CambioContrasenaEsquema,
+    DefinirContrasenaEsquema,
+    InicioSesionEsquema,
+    RegistroClienteEsquema,
+)
 from ..repositorios import autenticacion_repositorio as repositorio
 from ..tipos.autenticacion_tipo import SesionEmitida
 

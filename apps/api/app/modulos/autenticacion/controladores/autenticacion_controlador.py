@@ -6,7 +6,13 @@ from ....config.entorno import obtener_configuracion
 from ....shared.middleware.autenticacion import ActorDep
 from ....shared.utilidades.encabezado import ClienteDep, TipoCliente
 from ....shared.utilidades.respuesta import respuesta
-from ..esquemas.autenticacion_esquema import InicioSesionEsquema, RegistroClienteEsquema, CambioContrasenaEsquema, DefinirContrasenaEsquema, TokenRefrescoEsquema
+from ..esquemas.autenticacion_esquema import (
+    CambioContrasenaEsquema,
+    DefinirContrasenaEsquema,
+    InicioSesionEsquema,
+    RegistroClienteEsquema,
+    TokenRefrescoEsquema,
+)
 from ..servicios import autenticacion_servicio as servicio
 from ..tipos.autenticacion_tipo import SesionEmitida
 

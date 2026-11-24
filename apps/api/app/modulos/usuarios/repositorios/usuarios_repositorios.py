@@ -1,5 +1,6 @@
 from ....shared.base_de_datos import ejecutar_procedimiento as ejecutar
 
+
 async def listar_roles(id_actor: int) -> list[dict]:
     return await ejecutar.filas(
         'sp_seguridad_listar_roles',

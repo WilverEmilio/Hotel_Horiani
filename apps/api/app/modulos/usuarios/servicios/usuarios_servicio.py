@@ -2,6 +2,7 @@ from ....config.entorno import obtener_configuracion
 from ....shared.utilidades.tokens import hash_token, nuevo_token_opaco
 from ..repositorios import usuarios_repositorios as repositorio
 
+
 async def listar_roles(id_actor: int) -> list [dict]:
     return await repositorio.listar_roles(id_actor)
 
