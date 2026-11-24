@@ -15,7 +15,7 @@ from ..esquemas.tipos_habitacion_esquema import (
     ServiciosTipoEsquema,
     TarifasConsulta,
 )
-from ..servicios import tipos_habitacion_servicio as servicio
+from ..servicios import tipos_habitaciones_servicio as servicio
 
 
 async def listar_servicios_publico():

@@ -7,7 +7,7 @@ from ..esquemas.tipos_habitacion_esquema import (
     CrearTipoEsquema,
     ImagenTipoEsquema,
 )
-from ..repositorios import tipos_habitacion_repositorio as repositorio
+from ..repositorio import tipos_habitacion_repositorio as repositorio
 
 
 async def listar_servicios_publico() -> list[dict]:

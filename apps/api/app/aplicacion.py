@@ -5,6 +5,11 @@ from fastapi.responses import JSONResponse
 from .config.base_de_datos import conexion_disponible
 from .config.entorno import obtener_configuracion
 from .modulos.autenticacion.rutas.autenticacion_rutas import rutas_autenticacion
+from .modulos.habitaciones.rutas.habitacioens_rutas import rutas_habitaciones
+from .modulos.habitaciones.rutas.tipos_habitacion_rutas import (
+    rutas_tipos_habitacion,
+    rutas_tipos_habitacion_publico,
+)
 from .modulos.hoteles.rutas.hoteles_rutas import rutas_hoteles, rutas_hoteles_publico
 from .modulos.usuarios.rutas.usuarios_rutas import rutas_usuarios
 from .shared.middleware.contexto import contexto_peticion
@@ -15,6 +20,9 @@ RUTAS = [
     rutas_autenticacion,
     rutas_usuarios,
     rutas_hoteles,
+    rutas_habitaciones,
+    rutas_tipos_habitacion,
+    rutas_tipos_habitacion_publico
 ]
 
 
