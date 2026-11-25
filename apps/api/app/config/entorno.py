@@ -27,6 +27,10 @@ class Configuracion(BaseSettings):
     
     origenes_cors: str = "http://localhost:4321,http://localhost:5173"
     
+    url_api: str = 'http://localhost:8000'
+    pasarel: Literal['Simulada'] = 'simulada'
+    pasalera_secreto_webhook: SecretStr = SecretStr('')
+    
     jwt_secreto: SecretStr
     jwt_minutos_acceso: int = 15
     refresh_dias: int = 7
@@ -52,6 +56,8 @@ class Configuracion(BaseSettings):
             raise ValueError("COOKIE_SAMESITE=none requiere COOKIE_SEGURA=true")
         if self.cookie_dominio == '':
             self.cookie_dominio = None
+        if self.entorno == 'produccion' and self.pasarela == 'simulada':
+            raise ValueError('La pasarela simulada no se permite en producción')
         return self
     
     @property

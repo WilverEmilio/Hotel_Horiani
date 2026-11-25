@@ -11,6 +11,8 @@ from .modulos.habitaciones.rutas.tipos_habitacion_rutas import (
     rutas_tipos_habitacion_publico,
 )
 from .modulos.hoteles.rutas.hoteles_rutas import rutas_hoteles, rutas_hoteles_publico
+from .modulos.pagos.rutas.pago_rutas import rutas_pagos
+from .modulos.pagos.rutas.pasarela_simulada_rutas import rutas_pasarela_simulada
 from .modulos.reservaciones.rutas.reservaciones_rutas import (
     rutas_disponibilidad_publico,
     rutas_reservaciones,
@@ -29,6 +31,7 @@ RUTAS = [
     rutas_tipos_habitacion_publico,
     rutas_disponibilidad_publico,
     rutas_reservaciones,
+    rutas_pagos,
 ]
 
 
@@ -60,6 +63,8 @@ def crear_aplicacion(ciclo_de_vida=None) -> FastAPI:
     for rutas in RUTAS:
         v1.include_router(rutas)
     app.include_router(v1)
+    if conf.pasarela == 'simulada' and conf.entorno != 'produccion': 
+        v1.include_router(rutas_pasarela_simulada)
 
     @app.get("/health", tags=["Sistema"], summary="Estado de la API y de la conexión a la base")
     async def health():
