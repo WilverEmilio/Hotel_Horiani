@@ -8,7 +8,7 @@ from fastapi import Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 
 from ....shared.errores.error_aplicacion import ErrorAplicacion
-from ..servicios.pagos_servicio import procesar_aviso, url_resultado
+from ..servicios.pagos_servicios import procesar_aviso, url_resultado
 from ..servicios.pasarela_simulada_servicio import firmar, obtener_pasarela
 
 _PLANTILLA = """<!doctype html>

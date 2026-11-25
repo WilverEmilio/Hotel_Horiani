@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from ..controladores import pagos_controlador as c
+from ..controladores import pagos_controladores as c
 
 rutas_pagos = APIRouter(tags=["Pagos"])
 r = rutas_pagos

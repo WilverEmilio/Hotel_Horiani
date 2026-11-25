@@ -6,7 +6,7 @@ from ....shared.middleware.autenticacion import ActorDep
 from ....shared.utilidades.encabezado import LlaveDep
 from ....shared.utilidades.respuesta import respuesta
 from ..esquemas.pagos_esquema import PagoEnHotelEsquema, PagosConsulta, ReembolsoEsquema
-from ..servicios import pagos_servicio as servicio
+from ..servicios import pagos_servicios as servicio
 
 
 async def iniciar_anticipo(id_reservacion: int, actor: ActorDep, llave: LlaveDep):

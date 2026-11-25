@@ -28,8 +28,8 @@ class Configuracion(BaseSettings):
     origenes_cors: str = "http://localhost:4321,http://localhost:5173"
     
     url_api: str = 'http://localhost:8000'
-    pasarel: Literal['Simulada'] = 'simulada'
-    pasalera_secreto_webhook: SecretStr = SecretStr('')
+    pasarela: Literal['simulada'] = 'simulada'
+    pasarela_secreto_webhook: SecretStr = SecretStr('')
     
     jwt_secreto: SecretStr
     jwt_minutos_acceso: int = 15

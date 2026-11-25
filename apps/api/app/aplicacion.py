@@ -11,7 +11,7 @@ from .modulos.habitaciones.rutas.tipos_habitacion_rutas import (
     rutas_tipos_habitacion_publico,
 )
 from .modulos.hoteles.rutas.hoteles_rutas import rutas_hoteles, rutas_hoteles_publico
-from .modulos.pagos.rutas.pago_rutas import rutas_pagos
+from .modulos.pagos.rutas.pagos_rutas import rutas_pagos
 from .modulos.pagos.rutas.pasarela_simulada_rutas import rutas_pasarela_simulada
 from .modulos.reservaciones.rutas.reservaciones_rutas import (
     rutas_disponibilidad_publico,
