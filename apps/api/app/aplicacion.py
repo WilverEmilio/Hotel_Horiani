@@ -6,6 +6,7 @@ from .config.base_de_datos import conexion_disponible
 from .config.entorno import obtener_configuracion
 from .modulos.autenticacion.rutas.autenticacion_rutas import rutas_autenticacion
 from .modulos.clientes.rutas.clientes_rutas import rutas_clientes
+from .modulos.empleados.rutas.empleados_rutas import rutas_empleados
 from .modulos.habitaciones.rutas.habitacioens_rutas import rutas_habitaciones
 from .modulos.habitaciones.rutas.tipos_habitacion_rutas import (
     rutas_tipos_habitacion,
@@ -33,7 +34,8 @@ RUTAS = [
     rutas_disponibilidad_publico,
     rutas_reservaciones,
     rutas_pagos,
-    rutas_clientes
+    rutas_clientes, 
+    rutas_empleados
 ]
 
 
