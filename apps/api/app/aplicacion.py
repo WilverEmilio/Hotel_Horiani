@@ -5,7 +5,10 @@ from fastapi.responses import JSONResponse
 from .config.base_de_datos import conexion_disponible
 from .config.entorno import obtener_configuracion
 from .modulos.autenticacion.rutas.autenticacion_rutas import rutas_autenticacion
+from .modulos.bitacora.rutas.bitacora_rutas import rutas_bitacora
 from .modulos.clientes.rutas.clientes_rutas import rutas_clientes
+from .modulos.contenido.rutas.contenido_rutas import rutas_contenido
+from .modulos.cupones.rutas.cupones_rutas import rutas_cupones
 from .modulos.empleados.rutas.empleados_rutas import rutas_empleados
 from .modulos.habitaciones.rutas.habitacioens_rutas import rutas_habitaciones
 from .modulos.habitaciones.rutas.tipos_habitacion_rutas import (
@@ -41,7 +44,10 @@ RUTAS = [
     rutas_empleados,
     rutas_inventario,
     rutas_limpieza,
-    rutas_mantenimiento
+    rutas_mantenimiento,
+    rutas_cupones,
+    rutas_contenido,
+    rutas_bitacora,
 ]
 
 

@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from ..controladores import cupones_controlador as c
+from ..controladores import cupones_controladores as c
 
 rutas_cupones = APIRouter(prefix="/cupones", tags=["Cupones"])
 r = rutas_cupones

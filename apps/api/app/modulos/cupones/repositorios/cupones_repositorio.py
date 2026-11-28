@@ -1,51 +1,34 @@
+"""Stored procedures de cupones (script 030)."""
 from datetime import date
-from typing import Literal
+from decimal import Decimal
 
-from pydantic import Field, model_validator
-
-from ....shared.esquemas.comunes import ConsultaPaginada, EsquemaBase, Monto, MontoCero
-from ...reservaciones.esquemas.reservaciones_esquema import HabitacionPedidaEsquema
+from ....shared.base_de_datos import ejecutar_procedimiento as ejecutar
 
 
-class _CamposCupon(EsquemaBase):
-    descripcion: str | None = Field(None, max_length=200)
-    tipo: Literal["porcentaje", "monto_fijo"]
-    valor: Monto = Field(description="Porcentaje (hasta 100) o monto en quetzales")
-    fecha_inicio: date
-    fecha_fin: date
-    monto_minimo: MontoCero = 0
-    limite_usos_total: int | None = Field(None, gt=0)
-    limite_usos_cliente: int | None = Field(None, gt=0)
-    id_hotel: int | None = Field(None, description="Vacío = toda la cadena (solo administrador)")
-    id_tipo_habitacion: int | None = None
-
-    @model_validator(mode="after")
-    def _reglas(self):
-        if self.fecha_fin < self.fecha_inicio:
-            raise ValueError("La fecha final no puede ser anterior a la inicial")
-        if self.tipo == "porcentaje" and self.valor > 100:
-            raise ValueError("El porcentaje no puede superar 100")
-        return self
+async def crear(id_actor: int, codigo: str, descripcion: str | None, tipo: str, valor: Decimal, inicio: date,
+                fin: date, monto_minimo: Decimal, limite_total: int | None, limite_cliente: int | None,
+                id_hotel: int | None, id_tipo: int | None) -> int:
+    return await ejecutar.valor("sp_cupones_crear", id_actor, codigo, descripcion, tipo, valor, inicio, fin,
+                                monto_minimo, limite_total, limite_cliente, id_hotel, id_tipo)
 
 
-class CrearCuponEsquema(_CamposCupon):
-    codigo: str = Field(pattern=r"^[A-Za-z0-9_-]{3,30}$", description="Letras, números, guion y guion bajo")
+async def actualizar(id_actor: int, id_cupon: int, codigo: str, descripcion: str | None, tipo: str, valor: Decimal,
+                     inicio: date, fin: date, monto_minimo: Decimal, limite_total: int | None,
+                     limite_cliente: int | None, id_hotel: int | None, id_tipo: int | None, activo: bool) -> None:
+    await ejecutar.procedimiento("sp_cupones_actualizar", id_actor, id_cupon, codigo, descripcion, tipo, valor, inicio,
+                                 fin, monto_minimo, limite_total, limite_cliente, id_hotel, id_tipo, activo)
 
 
-class ActualizarCuponEsquema(CrearCuponEsquema):
-    activo: bool = True
+async def listar(id_actor: int, id_hotel: int | None, busqueda: str | None, estado: str | None, pagina: int,
+                 tamano: int) -> list[dict]:
+    return await ejecutar.filas("sp_cupones_listar", id_actor, id_hotel, busqueda, estado, pagina, tamano)
 
 
-class VistaPreviaEsquema(EsquemaBase):
-    codigo: str = Field(min_length=1, max_length=30)
-    id_hotel: int
-    fecha_entrada: date
-    fecha_salida: date
-    habitaciones: list[HabitacionPedidaEsquema] = Field(min_length=1, max_length=20)
-    id_cliente: int | None = Field(None, description="Solo el personal, para revisar el límite por cliente")
+async def obtener(id_actor: int, id_cupon: int) -> dict | None:
+    return await ejecutar.fila("sp_cupones_obtener", id_actor, id_cupon)
 
 
-class CuponesConsulta(ConsultaPaginada):
-    id_hotel: int | None = None
-    busqueda: str | None = Field(None, max_length=100)
-    estado: Literal["vigente", "programado", "vencido", "agotado", "inactivo"] | None = None
+async def vista_previa(id_actor: int, codigo: str, id_hotel: int, entrada: date, salida: date,
+                       habitaciones: list[dict], id_cliente: int | None) -> dict:
+    return await ejecutar.fila("sp_cupones_vista_previa", id_actor, codigo, id_hotel, entrada, salida,
+                               ejecutar.json(habitaciones), id_cliente)

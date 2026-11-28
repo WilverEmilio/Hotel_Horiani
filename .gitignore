@@ -27,3 +27,5 @@ out/
 *.log
 
 .venv/
+
+.claude
