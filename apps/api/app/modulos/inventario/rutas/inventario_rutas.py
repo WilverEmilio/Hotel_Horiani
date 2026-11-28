@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from ..controladores import inventario_controlador as c
+from ..controladores import lavanderia_controlador as lavanderia
 
 rutas_inventario = APIRouter(tags=["Inventario y lavandería"])
 r = rutas_inventario
@@ -26,3 +27,11 @@ r.add_api_route("/inventario/existencias", c.listar_existencias, methods=["GET"]
                 summary="Existencias por ubicación con alerta de mínimo")
 r.add_api_route("/inventario/movimientos", c.listar_movimientos, methods=["GET"], summary="Kardex")
 r.add_api_route("/inventario/alertas", c.alertas, methods=["GET"], summary="Artículos bajo el mínimo en bodega")
+
+r.add_api_route("/lavanderia/lotes", lavanderia.recibir_lote, methods=["POST"], status_code=201,
+                summary="Recibir blancos sucios de las habitaciones")
+r.add_api_route("/lavanderia/lotes", lavanderia.listar_lotes, methods=["GET"],
+                summary="Lotes con piezas recibidas, devueltas y faltantes")
+r.add_api_route("/lavanderia/lotes/{id_lote}", lavanderia.obtener_lote, methods=["GET"], summary="Detalle de un lote")
+r.add_api_route("/lavanderia/lotes/{id_lote}/devolver", lavanderia.devolver_lote, methods=["POST"],
+                summary="Devolver el lote a bodega (registra faltantes)")
