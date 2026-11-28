@@ -42,6 +42,7 @@ class Configuracion(BaseSettings):
     
     url_web: str = 'http://localhost:4321'
     enlace_contrasena_horas: int = 24
+    tareas_activas: bool = True
     
     cargar_datos_prueba: bool = False
     contrasena_datos_prueba: SecretStr = SecretStr('')

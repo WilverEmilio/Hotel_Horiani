@@ -7,7 +7,10 @@ from .config.entorno import obtener_configuracion
 from .modulos.autenticacion.rutas.autenticacion_rutas import rutas_autenticacion
 from .modulos.bitacora.rutas.bitacora_rutas import rutas_bitacora
 from .modulos.clientes.rutas.clientes_rutas import rutas_clientes
-from .modulos.contenido.rutas.contenido_rutas import rutas_contenido
+from .modulos.contenido.rutas.contenido_rutas import (
+    rutas_contenido,
+    rutas_contenido_publico,
+)
 from .modulos.cupones.rutas.cupones_rutas import rutas_cupones
 from .modulos.empleados.rutas.empleados_rutas import rutas_empleados
 from .modulos.habitaciones.rutas.habitacioens_rutas import rutas_habitaciones
@@ -21,6 +24,7 @@ from .modulos.limpieza.rutas.limpieza_rutas import rutas_limpieza
 from .modulos.mantenimiento.rutas.matenimiento_rutas import rutas_mantenimiento
 from .modulos.pagos.rutas.pagos_rutas import rutas_pagos
 from .modulos.pagos.rutas.pasarela_simulada_rutas import rutas_pasarela_simulada
+from .modulos.reportes.rutas.reportes_rutas import rutas_reportes
 from .modulos.reservaciones.rutas.reservaciones_rutas import (
     rutas_disponibilidad_publico,
     rutas_reservaciones,
@@ -48,6 +52,8 @@ RUTAS = [
     rutas_cupones,
     rutas_contenido,
     rutas_bitacora,
+    rutas_contenido_publico,
+    rutas_reportes
 ]
 
 
