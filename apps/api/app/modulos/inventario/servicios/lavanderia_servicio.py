@@ -5,7 +5,7 @@ from ..esquemas.lavanderia_esquema import (
     LotesConsulta,
     RecibirLoteEsquema,
 )
-from ..repositorios import lavanderia_repositorio as repositorio
+from ..repositorio import lavanderia_repositorio as repositorio
 
 
 async def recibir_lote(id_actor: int, d: RecibirLoteEsquema) -> dict:

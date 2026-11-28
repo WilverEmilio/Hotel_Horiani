@@ -14,6 +14,8 @@ from .modulos.habitaciones.rutas.tipos_habitacion_rutas import (
 )
 from .modulos.hoteles.rutas.hoteles_rutas import rutas_hoteles, rutas_hoteles_publico
 from .modulos.inventario.rutas.inventario_rutas import rutas_inventario
+from .modulos.limpieza.rutas.limpieza_rutas import rutas_limpieza
+from .modulos.mantenimiento.rutas.matenimiento_rutas import rutas_mantenimiento
 from .modulos.pagos.rutas.pagos_rutas import rutas_pagos
 from .modulos.pagos.rutas.pasarela_simulada_rutas import rutas_pasarela_simulada
 from .modulos.reservaciones.rutas.reservaciones_rutas import (
@@ -38,6 +40,8 @@ RUTAS = [
     rutas_clientes, 
     rutas_empleados,
     rutas_inventario,
+    rutas_limpieza,
+    rutas_mantenimiento
 ]
 
 
